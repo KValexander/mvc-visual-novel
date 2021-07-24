@@ -1,0 +1,98 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-size: 14pt;
+	font-family: Arial;
+}
+
+a {
+	text-decoration: none;
+	cursor: pointer;
+	transition: .2s;
+	color: black;
+}
+
+a:hover {
+	color: #00CCFF;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+div.content {
+	min-width: 600px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+header {
+	padding: 20px 0;
+	border-bottom: solid 3px #3399FF;
+	margin-bottom: 30px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.3);
+	overflow: hidden;
+}
+
+header h1 {
+	float: left;
+}
+
+header nav {
+	text-align: right;
+	line-height: 43px;
+}
+
+header nav a {
+	padding: 0 5px;
+}
+
+/*form {
+	text-align: center;
+}
+*/
+
+form p.note {
+	text-align: center;
+	padding-top: 20px;
+}
+form fieldset {
+	margin: 0 auto;
+	width: 50%;
+	border: solid 3px #3399FF;
+	padding: 20px;
+}
+
+form fieldset legend {
+	font-size: 20pt;
+}
+
+form input {
+	width: 100%;
+	outline: none;
+	margin-bottom: 20px;
+	border: solid 1px black;
+	height: 40px;
+	font-family: Arial;
+	font-size: 14pt;
+	padding-left: 5px;
+}
+
+form input[type=button],
+form input[type=submit] {
+	border: none;
+	color: white;
+	margin: 0;
+	cursor: pointer;
+	background-color: #3399FF;
+	transition: .2s;
+}
+
+form input[type=button]:hover,
+form input[type=submit]:hover {
+	background-color: #FF6600;
+}
