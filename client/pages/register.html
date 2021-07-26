@@ -1,18 +1,30 @@
+<script>
+	function register() {
+		let form = JSON.stringify({
+			"username": $("#register_form input[name=username]").val(),
+			"email": $("#register_form input[name=email]").val(),
+			"login": $("#register_form input[name=login]").val(),
+			"password": $("#register_form input[name=password]").val(),
+			"password_check": $("#register_form input[name=password_check]").val(),
+		});
+
+		request.post((data) => {
+			console.log(data);
+		}, form, "api/register");
+	}
+</script>
+
 <div class="content">
-	<form>
+	<form id="register_form">
 		<fieldset>
 			<legend>Регистрация</legend>
-
-			<input type="text" placeholder="Имя пользователя">
-			<input type="text" placeholder="Email">
-			<input type="text" placeholder="Логин">
-			<input type="text" placeholder="Пароль">
-			<input type="text" placeholder="Подтверждение пароля">
-			<input type="submit" value="Зарегистрироваться">
+			<input type="text" placeholder="Имя пользователя" name="username">
+			<input type="text" placeholder="Email" name="email">
+			<input type="text" placeholder="Логин" name="login">
+			<input type="text" placeholder="Пароль" name="password">
+			<input type="text" placeholder="Подтверждение пароля" name="password_check">
+			<input type="button" onclick="register()" value="Зарегистрироваться">
 			<p class="note">Вы уже зарегистрированы? <a class="underline" onclick="route.redirect('login')">Желаете войти?</a></p>
-
-
 		</fieldset>
 	</form>
-	
 </div>

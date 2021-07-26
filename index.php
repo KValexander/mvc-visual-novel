@@ -13,7 +13,7 @@
 	<script src="client/library/jquery.cookie.js"></script>
 
 	<!-- Connecting objects -->
-	<!-- <script src="client/request.js"></script> -->
+	<script src="client/request.js"></script>
 	<script src="client/route.js"></script>
 	<!-- Connecting scripts -->
 	<script src="client/script.js"></script>

@@ -5,9 +5,9 @@ let route = {
 	xhr: new XMLHttpRequest(),
 
 	// Modifying Path Data and Extensions
-	config: function(path, ext) {
+	config: function(path, extension) {
 		this.path_to_file = path;
-		this.extension = ext;
+		this.extension = extension;
 	},
 
 	// Checking the address bar
