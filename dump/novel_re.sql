@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июл 26 2021 г., 11:55
+-- Время создания: Июл 27 2021 г., 11:59
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.3.17
 
@@ -127,11 +127,11 @@ CREATE TABLE `novels-genres` (
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
-  `username` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `login` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `username` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `login` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `online` int(1) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 0,
@@ -238,7 +238,7 @@ ALTER TABLE `novels-genres`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

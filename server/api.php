@@ -16,7 +16,7 @@
 		if(!class_exists($params[0], false))
 			exit("Class $params[0] not found");
 
-		$controller = new $params[0];
+		$controller = new $params[0]($db);
 
 		// Getting and checking a method
 		if(!method_exists($controller, $params[1]))
@@ -25,7 +25,7 @@
 		$method = (string)$params[1];
 
 		// Method return
-		return $controller->$method();
+		return $controller->$method($_REQUEST);
 	} else exit("Route not found");
 
 ?>

@@ -1,29 +1,47 @@
 <script>
 	function register() {
-		let form = JSON.stringify({
-			"username": $("#register_form input[name=username]").val(),
-			"email": $("#register_form input[name=email]").val(),
-			"login": $("#register_form input[name=login]").val(),
-			"password": $("#register_form input[name=password]").val(),
-			"password_check": $("#register_form input[name=password_check]").val(),
-		});
+		// Serialize
+		let form = $("form").serialize();
 
+		// Server request
 		request.post((data) => {
 			console.log(data);
+			// Data parsing
+			data = JSON.parse(data);
+
+			// Handling Validation Errors
+			if(data.status == 422) {
+				$("input").removeClass("err");
+				$("p.error").html("").removeClass("error_acc");
+				for(key in data.data.errors) {
+					let error = data.data.errors[key];
+					$("#"+key).html(error).addClass("error_acc");
+					$(`input[name=${key}]`).addClass("err");
+				}
+			}
+
 		}, form, "api/register");
+
+		return false;
 	}
 </script>
 
 <div class="content">
-	<form id="register_form">
+	<form id="register_form" onsubmit="return register()">
 		<fieldset>
 			<legend>Регистрация</legend>
+			<p class="error" id="username"></p>
 			<input type="text" placeholder="Имя пользователя" name="username">
+			<p class="error" id="email"></p>
 			<input type="text" placeholder="Email" name="email">
+			<p class="error" id="login"></p>
 			<input type="text" placeholder="Логин" name="login">
+			<p class="error" id="coincidence"></p>
+			<p class="error" id="password"></p>
 			<input type="text" placeholder="Пароль" name="password">
+			<p class="error" id="password_check"></p>
 			<input type="text" placeholder="Подтверждение пароля" name="password_check">
-			<input type="button" onclick="register()" value="Зарегистрироваться">
+			<input type="submit" value="Зарегистрироваться">
 			<p class="note">Вы уже зарегистрированы? <a class="underline" onclick="route.redirect('login')">Желаете войти?</a></p>
 		</fieldset>
 	</form>

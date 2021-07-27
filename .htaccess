@@ -1,14 +1,13 @@
-#RewriteEngine on
-#RewriteRule ^index\.php$ - [L]
-#RewriteRule .* index.php [L]
-#RewriteRule api/.* server/api.php [L]
-
 RewriteEngine On
 RewriteBase /
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
-#RewriteRule .* /index.php [L]
+
+# Три важнейшие команды для настройки маршрутов
+RewriteCond %{REQUEST_URI} !^/api.*
+RewriteRule .* /index.php [L]
 RewriteRule ^api.*$ server/api.php
-ErrorDocument 404 /index.php
+
+#ErrorDocument 404 /index.php

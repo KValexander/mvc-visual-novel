@@ -11,7 +11,7 @@ let request = {
 				callback(data);
 			},
 			error: function(jqXHR) {
-				callback(jqXHR);
+				callback(jqXHR.responseText);
 			}
 		});
 	},
@@ -26,7 +26,7 @@ let request = {
 				callback(data);
 			},
 			error: function(jqXHR) {
-				callback(jqXHR);
+				callback(jqXHR.responseText);
 			}
 		});
 	}
