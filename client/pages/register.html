@@ -5,21 +5,21 @@
 
 		// Server request
 		request.post((data) => {
-			console.log(data);
 			// Data parsing
 			data = JSON.parse(data);
+			$("input").removeClass("err");
+			$("p.error").html("").removeClass("error_acc");
 
+			// Handling a successful registration
+			if(data.status == 200) route.redirect("index");
 			// Handling Validation Errors
-			if(data.status == 422) {
-				$("input").removeClass("err");
-				$("p.error").html("").removeClass("error_acc");
+			else if(data.status == 422) {
 				for(key in data.data.errors) {
 					let error = data.data.errors[key];
 					$("#"+key).html(error).addClass("error_acc");
 					$(`input[name=${key}]`).addClass("err");
 				}
 			}
-
 		}, form, "api/register");
 
 		return false;
@@ -27,7 +27,7 @@
 </script>
 
 <div class="content">
-	<form id="register_form" onsubmit="return register()">
+	<form onsubmit="return register()">
 		<fieldset>
 			<legend>Регистрация</legend>
 			<p class="error" id="username"></p>
@@ -38,9 +38,9 @@
 			<input type="text" placeholder="Логин" name="login">
 			<p class="error" id="coincidence"></p>
 			<p class="error" id="password"></p>
-			<input type="text" placeholder="Пароль" name="password">
+			<input type="password" placeholder="Пароль" name="password">
 			<p class="error" id="password_check"></p>
-			<input type="text" placeholder="Подтверждение пароля" name="password_check">
+			<input type="password" placeholder="Подтверждение пароля" name="password_check">
 			<input type="submit" value="Зарегистрироваться">
 			<p class="note">Вы уже зарегистрированы? <a class="underline" onclick="route.redirect('login')">Желаете войти?</a></p>
 		</fieldset>

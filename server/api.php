@@ -4,8 +4,7 @@
 	include "config/routes.php";
 
 	// Database connection
-	$db = new Database;
-	$db = $db->connect();
+	DB::connect();
 
 	// Checking for Route Availability
 	if(array_key_exists($_SERVER["REQUEST_URI"], $routes)) {
@@ -16,7 +15,7 @@
 		if(!class_exists($params[0], false))
 			exit("Class $params[0] not found");
 
-		$controller = new $params[0]($db);
+		$controller = new $params[0];
 
 		// Getting and checking a method
 		if(!method_exists($controller, $params[1]))

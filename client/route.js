@@ -36,30 +36,20 @@ let route = {
 
 	// Getting page
 	get_page: function(path, url) {
-
 		// XMLHttpRequest, the fastest
 		this.xhr.open("GET", path, false);
 		this.xhr.send();
 
-		if (this.xhr.status == 200)
+		if (this.xhr.status == 200) {
+			if (this.xhr.responseText.includes("<!DOCTYPE html>"))
+				return route.redirect("404");
 			$("#app").html(this.xhr.responseText);
+		}
 		else console.log(this.xhr);
 
 		// Fetch request, the shortest
 		// fetch(path).then(response => response.text())
 		// .then(data => $("#app").html(data));
-
-		// Ajax request, just ajax request
-		// $.ajax({
-		// 	url: path, // path to file
-		// 	success: function(data) {
-		// 		$("#app").html(data);
-		// 	},
-		// 	error: function(jqXHR) {
-		// 		console.log(jqXHR);
-		// 	}
-		// });
-
 	},
 
 	// Attach module
@@ -68,8 +58,11 @@ let route = {
 		this.xhr.open("GET", path, false);
 		this.xhr.send()
 
-		if (this.xhr.status == 200)
+		if (this.xhr.status == 200) {
+			if (this.xhr.responseText.includes("<!DOCTYPE html>"))
+				return $("#" + element_id).html(`<h1>Ошибка 404</h1> <h3>Такого файла нет</h3>`);
 			$("#" + elem_id).html(this.xhr.responseText);
+		}
 		else console.log(this.xhr);
 	},
 };

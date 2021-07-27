@@ -1,10 +1,39 @@
+<script>
+	function authorization() {
+		// Serialize
+		let form = $("form").serialize();
+
+		// Server request
+		request.post((data) => {
+			// Data parsing
+			data = JSON.parse(data);
+			$("input").removeClass("err");
+			$("p.error").html("").removeClass("error_acc");
+
+			// Handling a successful registration
+			if(data.status == 200) route.redirect("index");
+			// Handling Validation Errors
+			else if(data.status == 422) {
+				for(key in data.data.errors) {
+					let error = data.data.errors[key];
+					$("#"+key).html(error).addClass("error_acc");
+					$(`input[name=${key}]`).addClass("err");
+				}
+			}
+		}, form, "api/login");
+		return false;
+	}
+</script>
+
 <div class="content">
-	<form>
+	<form onsubmit="return authorization()" method="POST">
 		<fieldset>
 			<legend>Авторизация</legend>
 
-			<input type="text" placeholder="Логин">
-			<input type="text" placeholder="Пароль">
+			<p class="error" id="login"></p>
+			<input type="text" placeholder="Логин" name="login">
+			<p class="error" id="password"></p>
+			<input type="password" placeholder="Пароль" name="password">
 			<input type="submit" value="Войти">
 			<p class="note"><a class="underline">Забыли пароль?</a> или <a class="underline" onclick="route.redirect('register')">Желаете зарегистрироваться?</a></p>
 		</fieldset>

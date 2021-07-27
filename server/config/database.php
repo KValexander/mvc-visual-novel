@@ -1,20 +1,22 @@
 <?php
-class Database {
-	private $dbhost = "localhost";
-	private $dbuser = "root";
-	private $dbpass = "root";
-	private $dbname = "novel_re";
-	private $connect;
+class DB {
+	private static $dbhost = "localhost";
+	private static $dbuser = "root";
+	private static $dbpass = "root";
+	private static $dbname = "novel_re";
+	public static $connect;
 	
-	public function connect() {
-		$this->connect = null;
-		$this->connect = new mysqli($this->dbhost, $this->dbuser, $this->dbpass, $this->dbname);
-		$this->connect->set_charset("utf8");
+	public static function connect() {
+		self::$connect = null;
+		self::$connect = new mysqli(self::$dbhost, self::$dbuser, self::$dbpass, self::$dbname);
+		self::$connect->set_charset("utf8");
+		if(self::$connect->connect_errno)
+			die("Connection error: ". self::$connect->connect_errno);
+	}
 
-		if($this->connect->connect_errno)
-			die("Connection error: ". $this->connect->connect_errno);
-
-		return $this->connect;
+	public static function query($sql) {
+		$result = self::$connect->query($sql);
+		return $result;
 	}
 }
 ?>
