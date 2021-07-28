@@ -15,6 +15,7 @@
 	<!-- Connecting objects -->
 	<script src="client/request.js"></script>
 	<script src="client/route.js"></script>
+	<script src="client/message.js"></script>
 	<!-- Connecting scripts -->
 	<script src="client/script.js"></script>
 
@@ -30,6 +31,8 @@
 
 	<!-- Content part of the page -->
 	<div id="app"></div>
-	
+
+	<!-- Block for displaying messages -->
+	<div id="message"></div>
 </body>
 </html>

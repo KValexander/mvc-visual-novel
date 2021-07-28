@@ -11,13 +11,17 @@
 			$("p.error").html("").removeClass("error_acc");
 
 			// Handling a successful registration
-			if(data.status == 200) route.redirect("index");
+			if(data.status == 200) {
+				message.show(data.data.message);
+				route.redirect("index");
+			}
 			// Handling Validation Errors
 			else if(data.status == 422) {
+				$("input").addClass("acc")
 				for(key in data.data.errors) {
 					let error = data.data.errors[key];
 					$("#"+key).html(error).addClass("error_acc");
-					$(`input[name=${key}]`).addClass("err");
+					$(`input[name=${key}]`).addClass("err").removeClass("acc");
 				}
 			}
 		}, form, "api/register");

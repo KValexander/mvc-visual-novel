@@ -10,6 +10,16 @@ body {
 	background-color: #f3f3f3;
 }
 
+input.err::-webkit-input-placeholder {
+	color: rgba(255,0,0,0.8);
+}
+input.acc::-webkit-input-placeholder {
+	color: rgba(0,128,0,0.8);
+}
+input:focus::-webkit-input-placeholder {
+	color: rgba(51,153,255, 1);
+}
+
 a {
 	text-decoration: none;
 	cursor: pointer;
@@ -91,10 +101,16 @@ form input {
 	font-family: Arial;
 	font-size: 14pt;
 	padding-left: 5px;
+	transition: .2s;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
 }
 form input.err {
 	border: solid 1px red;
 	box-shadow: 0 0 3px rgba(128, 0, 0, 0.5);
+}
+form input.acc {
+	border: solid 1px green;
+	box-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
 
 form input[type=button],
@@ -106,8 +122,42 @@ form input[type=submit] {
 	background-color: #3399FF;
 	transition: .2s;
 }
+form input:focus {
+	border: solid 1px #3399FF;
+	box-shadow: 0 0 3px rgba(51,153,255,0.5);
+}
+form input[type=button]:focus,
+form input[type=submit]:focus {
+	border: none;
+	background-color: #FF6600;
+}
 
 form input[type=button]:hover,
 form input[type=submit]:hover {
+	background-color: #FF6600;
+}
+
+#message {
+	position: fixed;
+	transition: .2s;
+	cursor: pointer;
+	top: 4%;
+	left: 76%;
+	width: 20%;
+	z-index: 100;
+	display: none;
+	padding: 10px;
+	text-align: center;
+	border-radius: 5px;
+	background-color: white;
+	border: solid 3px #3399FF;
+	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+#message div {
+	position: relative;
+	top: 5px;
+	height: 5px;
+	width: 100%;
+	border-radius: 5px;
 	background-color: #FF6600;
 }

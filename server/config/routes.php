@@ -5,5 +5,7 @@
 		"/api/register" => "AuthController/register",
 		// Login
 		"/api/login" => "AuthController/login",
+		// Getting user data
+		"/api/user" => "AuthController/getUserData",
 	);
 ?>

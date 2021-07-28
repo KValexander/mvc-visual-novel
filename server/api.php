@@ -2,6 +2,10 @@
 	// Including files
 	include "config/database.php";
 	include "config/routes.php";
+	include "config/rand.php";
+
+	// Session start
+	session_start();
 
 	// Database connection
 	DB::connect();

@@ -50,10 +50,19 @@ function validator($data, $arr) {
 					break;
 
 				// Unique
-				case "unique":
-					$sql = "SELECT `login` FROM `users` WHERE `".$key."`='".$data[$key]."'";
+				case preg_match("/unique:/", $val) == true:
+					$unique = explode(":", $val);
+					$unique = explode(",", $unique[1]);
+					$sql = sprintf("SELECT `%s` FROM `%s` WHERE `%s`='%s'", $unique[1], $unique[0], $unique[1], $data[$key]);
 					$result = DB::query($sql);
 					if ($result->fetch_assoc() != NULL) $errors->errors[$key] = "Такое значение уже есть в нашей базе";
+				break;
+
+				// Coincidence
+				case preg_match("/coincidence:/", $val) == true:
+					$coincidence = explode(":", $val);
+					if ($data[$key] != $data[$coincidence[1]])
+						$errors->errors[$key] = "Поля не совпадают";
 					break;
 			}
 		}

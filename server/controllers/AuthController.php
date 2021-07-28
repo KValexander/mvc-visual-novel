@@ -2,6 +2,7 @@
 // Including files
 include "config/validator.php";
 include "config/response.php";
+include "config/auth.php";
 
 class AuthController {
 
@@ -11,8 +12,8 @@ class AuthController {
 		$validator = validator($request, [
 			"username" => "required|string|max:30",
 			"email" => "required|string|email|max:50",
-			"login" => "required|string|max:30|unique",
-			"password" => "required|string|max:100",
+			"login" => "required|string|max:30|unique:users,login",
+			"password" => "required|string|max:100|coincidence:password_check",
 			"password_check" => "required",
 		]);
 
@@ -29,7 +30,7 @@ class AuthController {
 		$username 		= trim($request["username"]);
 		$email 			= trim($request["email"]);
 		$login 			= trim($request["login"]);
-		$password 		= trim($request["password"]);
+		$password 		= crypt(trim($request["password"]));
 		$password_check = trim($request["password_check"]);
 
 		// Default data
@@ -51,13 +52,47 @@ class AuthController {
 		}
 
 		// In case of successful data insertion
-		$data = (object)["message" => "You have successfully registered"];
+		$data = (object)["message" => "Аккаунт успешно зарегистрирован"];
 		return response(200, $data);
+	}
+
+	public function getUserData($request) {
+		return response(200, Auth::user());
 	}
 
 	// User authorization
 	public function login($request) {
-		return response(422, "auf");
+		// Data validation
+		$validator = validator($request, [
+			"login" => "required|string|max:30",
+			"password" => "required|string|max:100",
+		]);
+
+		// If there are validation errors
+		if($validator->fails) {
+			$data = (object)[
+				"message" => "Ошибка валидации",
+				"errors" => $validator->errors
+			];
+			return response(422, $data);
+		}
+
+		// Writing data to variables 
+		$login = trim($request["login"]);
+		$password = trim($request["password"]);
+
+		// Authorization check
+		if(Auth::attempt(["login" => $login, "password" => $password], true)) {
+			$data = (object)[
+				"message" => "Вы успешно авторизировались",
+				"token" => $token
+			];
+			return response(200, $data);
+		} else {
+			$data = (object)["message" => "Ошибка логина или пароля"];
+			return response(401, $data);
+		}
+
 	}
 
 }
