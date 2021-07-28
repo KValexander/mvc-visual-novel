@@ -14,7 +14,10 @@ let route = {
 	check_pathname: function() {
 		let pathname = location.pathname;
 		if (/\/$/.test(pathname) && pathname.length > 1) pathname = pathname.replace(/.$/, "");
-		if (pathname != "/") this.redirect(pathname.substr(1), false)
+		if (pathname != "/") {
+			if (pathname.includes("-")) pathname = pathname.replace("-", "/");
+			this.redirect(pathname.substr(1), false);
+		}
 		else this.redirect("index", false);
 	},
 

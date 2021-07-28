@@ -1,8 +1,8 @@
 <?php
 	// Including files
 	include "config/database.php";
-	include "config/routes.php";
 	include "config/rand.php";
+	include "routes.php";
 
 	// Session start
 	session_start();
@@ -10,9 +10,13 @@
 	// Database connection
 	DB::connect();
 
+	// Headers 
+	header("Access-Control-Allow-Origin: *");
+	header("Content-Type:application/json;charset=UTF-8");
+
 	// Checking for Route Availability
-	if(array_key_exists($_SERVER["REQUEST_URI"], $routes)) {
-		$params = explode("/", $routes[$_SERVER["REQUEST_URI"]]);
+	if (Route::search($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"])) {
+		$params = explode("/", Route::give($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"]));
 
 		// Getting and checking a class and controller
 		include "controllers/". $params[0] .".php";
@@ -27,7 +31,6 @@
 
 		$method = (string)$params[1];
 
-		// Method return
 		return $controller->$method($_REQUEST);
 	} else exit("Route not found");
 

@@ -1,6 +1,7 @@
 <?php
 class Auth {
 	private static 	$table 			= "users";
+	private static 	$primary_key 	= "user_id";
 	private static 	$field_password = "password";
 	private static 	$field_token	= "remember_token";
 	private static 	$check 			= false;
@@ -28,9 +29,12 @@ class Auth {
 				self::$user = DB::query($sql)->fetch_assoc();
 				self::$check = true;
 
-				if($state == true) self::$token = Rand::string(50);
-
-				$_SESSION["user"] = self::$user;
+				// Remember token
+				if($state == true) {
+					self::$token = Rand::string(50);
+					$_SESSION["token"] = self::$token;
+					DB::query(sprintf("UPDATE `%s` SET `%s`='%s' WHERE `%s`='%s'", self::$table, self::$field_token, self::$token, self::$primary_key, self::$user[self::$primary_key]));
+				}
 				$_SESSION["check"] = self::$check;
 			}
 		}
@@ -39,12 +43,23 @@ class Auth {
 
 	// Retrieving Authorized User Data
 	public static function user() {
-		return $_SESSION["user"];
+		if (self::check()) {
+			self::$user = DB::query(sprintf("SELECT * FROM `%s` WHERE `%s`='%s'", self::$table, self::$field_token, $_SESSION["token"]))->fetch_assoc();
+			return self::$user;
+		}
+		else return NULL;
 	}
 
 	// Authorization check
 	public static function check() {
 		return $_SESSION["check"];
+	}
+
+	// Logout from authorization
+	public static function logout() {
+		// unset($_SESSION["token"]);
+		// unset($_SESSION["check"]);
+		session_destroy();
 	}
 }
 ?>

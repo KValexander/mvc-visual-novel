@@ -1,2 +1,22 @@
-<a onclick="route.redirect('register')">Регистрация</a>
-<a onclick="route.redirect('login')">Авторизация</a>
+<script>
+	request.get((data) => {
+		if (data.data == null) role = "guest";
+		else role = data.data;
+
+		if (role == "guest") { 
+			out = `
+				<a onclick="route.redirect('auth/register')">Регистрация</a>
+				<a onclick="route.redirect('auth/login')">Авторизация</a>
+			`;
+		}
+		else if (role == "user" || role == "admin" || role == "moderator") {
+			out = `
+				<a onclick="route.redirect('index')">Главная</a>
+				<a onclick="route.redirect('profile')">Личный кабинет</a>
+				<a onclick="auth.logout()">Выйти</a>
+			`;
+		}
+
+		$("#menu").html(out);
+	}, null, "api/role");
+</script>

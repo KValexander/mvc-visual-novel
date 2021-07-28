@@ -56,10 +56,6 @@ class AuthController {
 		return response(200, $data);
 	}
 
-	public function getUserData($request) {
-		return response(200, Auth::user());
-	}
-
 	// User authorization
 	public function login($request) {
 		// Data validation
@@ -92,7 +88,11 @@ class AuthController {
 			$data = (object)["message" => "Ошибка логина или пароля"];
 			return response(401, $data);
 		}
+	}
 
+	// Logout
+	public function logout() {
+		Auth::logout();
 	}
 
 }
