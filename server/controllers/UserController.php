@@ -18,5 +18,9 @@ class UserController {
 		return response(200, Auth::user());
 	}
 
+	public function update_avatar($request) {
+		var_dump($request["picture"]);
+	}
+
 }
 ?>

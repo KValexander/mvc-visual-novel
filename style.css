@@ -16,7 +16,8 @@ input.err::-webkit-input-placeholder {
 input.acc::-webkit-input-placeholder {
 	color: rgba(0,128,0,0.8);
 }
-input:focus::-webkit-input-placeholder {
+input:focus::-webkit-input-placeholder,
+textarea:focus::-webkit-input-placeholder {
 	color: rgba(51,153,255, 1);
 }
 
@@ -31,6 +32,14 @@ a:hover {
 	color: #00CCFF;
 }
 
+hr {
+	border: solid 2px #3399FF;
+}
+
+div#app {
+	margin-bottom: 30px;
+}
+
 .underline {
 	text-decoration: underline;
 }
@@ -41,6 +50,13 @@ div.content {
 	margin: 0 auto;
 }
 
+p.notice {
+	font-size: 9pt;
+	color: gray;
+}
+
+/*====Header====*/
+/*==============================================*/
 header {
 	padding: 20px 0;
 	border-bottom: solid 3px #3399FF;
@@ -62,15 +78,13 @@ header nav {
 header nav a {
 	padding: 0 5px;
 }
+/*==============================================*/
 
-/*form {
-	text-align: center;
-}*/
-
-
+/*====Form====*/
+/*==============================================*/
 form p.note {
 	text-align: center;
-	padding-top: 20px;
+	padding-top: 10px;
 }
 form p.error {
 	color: red;
@@ -79,31 +93,43 @@ form p.error_acc {
 	padding-bottom: 5px;
 }
 form fieldset {
-	margin: 0 auto;
-	width: 50%;
-	border: solid 3px #3399FF;
-	padding: 20px;
 	background-color: white;
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-	border-radius: 5px;
 }
 
-form fieldset legend {
-	font-size: 20pt;
-}
-
-form input {
+form input,
+form select {
 	width: 100%;
 	outline: none;
-	margin-bottom: 20px;
+	margin: 10px 0;
 	border: solid 1px black;
 	height: 40px;
 	font-family: Arial;
 	font-size: 14pt;
 	padding-left: 5px;
 	transition: .2s;
-	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	/*box-shadow: 0 0 3px rgba(0,0,0,0.5);*/
 }
+
+form input[type=file] {
+	border: none;
+	height: 35px;
+	border-bottom: solid 2px black;
+}
+
+form div.part {
+	display: flex;
+}
+
+form div.part input,
+form div.part select {
+	width: 69%;
+}
+form div.part input[type=button] {
+	margin-left: 1%;
+	width: 30%;
+}
+
 form input.err {
 	border: solid 1px red;
 	box-shadow: 0 0 3px rgba(128, 0, 0, 0.5);
@@ -117,25 +143,130 @@ form input[type=button],
 form input[type=submit] {
 	border: none;
 	color: white;
-	margin: 0;
 	cursor: pointer;
 	background-color: #3399FF;
 	transition: .2s;
 }
-form input:focus {
+form input:focus,
+form textarea:focus {
 	border: solid 1px #3399FF;
 	box-shadow: 0 0 3px rgba(51,153,255,0.5);
 }
 form input[type=button]:focus,
 form input[type=submit]:focus {
 	border: none;
-	background-color: #FF6600;
+	/*background-color: #FF6600;*/
 }
 
 form input[type=button]:hover,
 form input[type=submit]:hover {
 	background-color: #FF6600;
 }
+
+form textarea {
+	width: 100%;
+	padding: 5px;
+	outline: none;
+	font-size: 14pt;
+	transition: .2s;
+	min-height: 100px;
+	border: solid 1px black;
+	font-family: Arial;
+}
+/*==============================================*/
+
+/*Auth*/
+/*==============================================*/
+div.auth form fieldset {
+	border: solid 3px #3399FF;
+	border-radius: 5px;
+	margin: 0 auto;
+	width: 50%;
+	padding: 20px;
+}
+
+div.auth form fieldset legend {
+	font-size: 20pt;
+}
+/*==============================================*/
+
+/*Add novel*/
+/*==============================================*/
+div.add_novel form fieldset {
+	border: solid 1px #3399FF;
+	padding: 10px;
+	margin: 10px 0;
+}
+div.add_novel form fieldset legend {
+	font-size: 16pt;
+}
+/*==============================================*/
+
+/*====Personal area====*/
+/*==============================================*/
+div.profile {
+	display: flex;
+	flex-wrap: wrap;
+}
+nav.tabs {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+nav.tabs div {
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	padding: 10px;
+	color: black;
+	transition: .2s;
+	border-radius: 5px;
+	cursor: pointer;
+}
+nav.tabs div.active {
+	background-color: #3399FF;
+	color: white;
+}
+nav.tabs div:hover {
+	background-color: #3399FF;
+	color: white;
+}
+
+div.content div.right {
+	width: 68%;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	background-color: rgba(255,255,255, 0.9);
+}
+
+div.content div.left {
+	margin-left: 2%;
+	width: 30%;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	background-color: rgba(255,255,255, 0.9);
+}
+
+div.profile nav.actions {
+	display: flex;
+	text-align: right;
+	flex-wrap: wrap;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+div.profile nav.actions p {
+	margin: 5px 0;
+	padding: 5px 0;
+	border-radius: 5px;
+}
+div.profile nav.actions p.notice {
+	margin: 0;
+	padding: 0;
+}
+
+/*==============================================*/
 
 #message {
 	position: fixed;

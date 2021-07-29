@@ -1,5 +1,6 @@
 <script>
 	request.get((data) => {
+		data = JSON.parse(data);
 		if (data.data == null) role = "guest";
 		else role = data.data;
 
@@ -10,8 +11,9 @@
 			`;
 		}
 		else if (role == "user" || role == "admin" || role == "moderator") {
-			out = `
-				<a onclick="route.redirect('index')">Главная</a>
+			out = ``;
+			if (role == "admin" || role == "moderator") out += `<a onclick="route.redirect('moderation/main')">Модерация</a>`;
+			out += `
 				<a onclick="route.redirect('profile')">Личный кабинет</a>
 				<a onclick="auth.logout()">Выйти</a>
 			`;

@@ -7,6 +7,8 @@
 	Route::post("/api/login", "AuthController/login");
 	// User
 	Route::get("/api/user", "UserController/get_user");
+	// Update avatar
+	Route::post("/api/user/update/avatar", "UserController/update_avatar");
 	// Role
 	Route::get("/api/role", "UserController/get_role");
 	// Logout

@@ -1,11 +1,192 @@
 <script>
-	request.get((data) => {
-		if (data.data == null) return route.redirect("index");
-		request.get((data) => console.log(data), null, "api/user");
-	}, null, "api/role");
+	// Page tab
+	$(".wrap .tab_content").css("display", "none");
+	$(".right .wrap .tab_content").eq(0).fadeIn(100);
+	$(".left .wrap .tab_content").eq(0).fadeIn(100);
+	$(".tabs div").click(function() {
+		$(".wrap .tab_content").css("display", "none");
+		$(".tabs div").removeClass("active");
+		$(".right .wrap .tab_content").eq($(this).index()).fadeIn(200);
+		$(".left .wrap .tab_content").eq($(this).index()).fadeIn(200);
+		$(this).addClass("active");
+	});
+
+	// Authorization check
+	auth.check((role) => {
+		// Retrieving Authorized User Data
+		request.get((data) => {
+			// Data parsing
+			data = JSON.parse(data);
+			out = `<p><b>Имя пользователя:</b> ${data.data.username}</p><p><b>Роль:</b> ${data.data.role}</p>`;
+			$("#personal_inform").html(out);
+		}, null, "api/user");
+	});
+
+	// Adding a profile picture
+	function update_picture() {
+		let formData = new FormData();
+		let image = $("input[name=picture]").prop("files")[0];
+		formData.append("picture", image);
+		request.post((data) => {
+			console.log(data);
+		}, formData, "api/user/update/avatar");
+	}
 </script>
 
 <div class="content">
-	<h1>Личный кабинет</h1><br>
-
+	<div class="profile">
+		<div class="right">
+			<nav class="tabs">
+				<div class="active">Страница</div>
+				<div>Избранное</div>
+				<div>Добавить новеллу</div>
+				<div>На модерации</div>
+				<div>Добавленное</div>
+			</nav>
+			<div class="wrap">
+				<!-- User information -->
+				<div class="tab_content">
+					<h2>Информация о пользователе</h2><br>
+					<div id="personal_inform"></div>
+				</div>
+				<!-- Favorite novel -->
+				<div class="tab_content">
+					<h2>Избранные новеллы</h2><br>
+					<h3>На данный момент информация отсутствует</h3>
+				</div>
+				<!-- Adding novel -->
+				<div class="tab_content">
+					<h2>Добавление новеллы</h2>
+					<div class="add_novel">
+						<!-- Adding a novel -->
+						<form onsubmit="return add_novel()">
+							<!-- Novel titles -->
+							<fieldset>
+								<legend>Названия</legend>
+								<p class="error" id="title"></p>
+								<input type="text" placeholder="Название" name="title">
+								<input type="text" placeholder="Оригинальное название" name="original_title">
+								<input type="text" placeholder="Альтернативное название" name="alternative_title">
+							</fieldset>
+							<!-- Novel images -->
+							<fieldset>
+								<legend>Изображения</legend>
+								<p>Обложка новеллы</p>
+								<p class="error" id="cover"></p>
+								<input type="file" name="cover">
+								<p>Скриншот новеллы</p>
+								<div class="part">
+									<input type="file">
+									<input type="button" value="Добавить">
+								</div>
+								<div class="screenshots">
+									Добавьте скриншот
+								</div>
+							</fieldset>
+							<!-- Developer, release year and description -->
+							<fieldset>
+								<legend>Разработчик, год релиза и описание</legend>
+								<p class="error" id="developer"></p>
+								<input type="text" placeholder="Разработчик" name="developer">
+								<input type="number" placeholder="Год релиза" name="year_release">
+								<textarea placeholder="Описание" name="description"></textarea>
+							</fieldset>
+							<!-- Genres -->
+							<fieldset>
+								<legend>Жанры</legend>
+								<div class="part">
+									<select name="genres">
+										<option disabled selected>Жанры</option>
+									</select>
+									<input type="button" value="Добавить">
+								</div>
+								<div class="genres">
+									Добавьте жанр
+								</div>
+							</fieldset>
+							<!-- Lists -->
+							<fieldset>
+								<legend>Списки</legend>
+								<select name="type">
+									<option selected disabled>Тип</option>
+									<option value="Новелла с выборами">Новелла с выборами</option>
+									<option value="Кинетическая новелла">Кинетическая новелла</option>
+								</select>
+								<select name="duration">
+									<option selected disabled>Продолжительность</option>
+									<option value="Менее 2 часов">Менее 2 часов</option>
+									<option value="2-10 часов">2-10 часов</option>
+									<option value="10-30 часов">10-30 часов</option>
+									<option value="30-50 часов">30-50 часов</option>
+									<option value="Более 50 часов">Более 50 часов</option>
+								</select>
+								<select name="platform">
+									<option selected disabled>Платформа</option>
+									<option value="Windows">Windows</option>
+									<option value="Linux">Linux</option>
+									<option value="Mac">Mac</option>
+									<option value="Android">Android</option>
+									<option value="iOS">iOS</option>
+									<option value="Другое">Другое</option>
+								</select>
+								<select name="age_rating">
+									<option selected disabled>Возрастной рейтинг</option>
+									<option value="G">G</option>
+									<option value="PG">PG</option>
+									<option value="PG-13">PG-13</option>
+									<option value="R">R</option>
+									<option value="NC-17">NC-17</option>
+								</select>
+								<select name="country">
+									<option selected disabled>Страна</option>
+									<option value="Россия">Россия</option>
+									<option value="Япония">Япония</option>
+									<option value="США">США</option>
+								</select>
+								<select name="language">
+									<option selected disabled>Язык</option>
+									<option value="Русский">Русский</option>
+									<option value="Японский">Японский</option>
+									<option value="Английский">Английский</option>
+								</select>
+							</fieldset>
+							<input type="submit" value="Отправить на модерацию">
+						</form>
+					</div>
+				</div>
+				<!-- Novels on moderation -->
+				<div class="tab_content">
+					<h2>Новеллы на модерации</h2><br>
+					<h3>На данный момент информация отсутствует</h3>
+				</div>
+				<!-- Novels on the site -->
+				<div class="tab_content">
+					<h2>Новеллы на сайте</h2><br>
+					<h3>На данный момент информация отсутствует</h3>
+				</div>
+			</div>
+		</div>
+		<div class="left">
+			<div class="wrap">
+				<div class="tab_content">
+					<nav class="actions">
+						<h2>Действия</h2>
+						<hr><br>
+						<h4>Загрузить изображение профиля</h4>
+						<form id="update_picture">
+							<input type="file" name="picture">
+							<p class="notice">Изображение должно весить не более 1мб</p>
+							<a onclick="update_picture()" class="underline">Загрузить</a>
+						</form>
+					</nav>
+				</div>
+				<div class="tab_content"></div>
+				<div class="tab_content">
+					<h2>Предпросмотр</h2>
+				</div>
+				<div class="tab_content"></div>
+				<div class="tab_content"></div>
+			</div>
+		</div>
+	</div>
 </div>
