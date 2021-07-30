@@ -7,10 +7,9 @@ class UserController {
 
 	// Getting a user's role
 	public function get_role($request) {
-		if(Auth::check()) {
-			$user = Auth::user();
-			return response(200, $user["role"]);
-		} else return response(200, NULL);
+		$user = Auth::user();
+		if ($user != NULL) return response(200, $user["role"]);
+		else return response(200, NULL);
 	}
 
 	// Retrieving Authorized User Data

@@ -1,5 +1,10 @@
 // The object of sending requests to the server
 let request = {
+	headers: function(xhr) {
+		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		// 'Authorization' is not sent, so I will send an arbitrary header with a token
+		xhr.setRequestHeader('Auth-Token', localStorage.getItem("token"));
+	},
 	get: function(callback, data, url) {
 		let xhr = new XMLHttpRequest();
 		// Opening an asynchronous XMLHttpRequest request
@@ -12,11 +17,11 @@ let request = {
 			else callback(xhr.responseText);
 		}
 		// Headers
-		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		this.headers(xhr);
 		// Sending data
 		xhr.send(data);
 	},
-	post: function(callback, data, url, enctype) {
+	post: function(callback, data, url) {
 		let xhr = new XMLHttpRequest();
 		// Opening an asynchronous XMLHttpRequest request
 		xhr.open("POST", url, true);
@@ -28,10 +33,13 @@ let request = {
 			else callback(xhr.responseText);
 		}
 		// Headers
-		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+		this.headers(xhr);
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.setRequestHeader('X-CSRF-Token', '');
 		// Sending data
 		xhr.send(data);
+	},
+	formData: function(callback, data, url) {
+		
 	}
 }

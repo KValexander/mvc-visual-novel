@@ -1,11 +1,11 @@
 <?php
+	// Session start
+	session_start();
+
 	// Including files
 	include "config/database.php";
 	include "config/rand.php";
 	include "routes.php";
-
-	// Session start
-	session_start();
 
 	// Database connection
 	DB::connect();
@@ -16,7 +16,13 @@
 
 	// Checking for Route Availability
 	if (Route::search($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"])) {
-		$params = explode("/", Route::give($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"]));
+		// Getting route value
+		$route = Route::give($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"]);
+		// If passed function
+		if (is_callable($route)) return $route($_REQUEST);
+
+		// Retrieving parameters
+		$params = explode("/", $route);
 
 		// Getting and checking a class and controller
 		include "controllers/". $params[0] .".php";

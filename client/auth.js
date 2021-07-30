@@ -13,12 +13,18 @@ let auth = {
 
 			// Handling a successful registration
 			if(data.status == 200) {
+				// Saving a token
+				localStorage.setItem("token", data.data.token);
+				// Show message
 				message.show(data.data.message);
+				// Redirecting
 				route.redirect("profile");
 				route.attach_module("client/pages/modules/menu.html", "menu");
 			// Handling errors
 			} else this.errors(data);
 		}, form, "api/login");
+
+		// For form submit
 		return false;
 	},
 
@@ -41,18 +47,20 @@ let auth = {
 			// Handling errors
 			} else this.errors(data);
 		}, form, "api/register");
+
+		// For form submit
 		return false;
 	},
 
 	// Authorization check
 	check: function(callback) {
-		request.get((data) => {
+		request.post(data => {
 			data = JSON.parse(data);
-			if (data.data == null) {
+			if (data.data != true) {
 				message.show("Вы не авторизованы");
 				return route.redirect("auth/login");
-			} else callback(data.data)
-		}, null, "api/role");
+			} else callback();
+		}, null, "api/auth/check");
 	},
 
 	// Handling errors

@@ -79,6 +79,7 @@ class AuthController {
 
 		// Authorization check
 		if(Auth::attempt(["login" => $login, "password" => $password], true)) {
+			$token = Auth::token();
 			$data = (object)[
 				"message" => "Вы успешно авторизировались",
 				"token" => $token
@@ -93,6 +94,12 @@ class AuthController {
 	// Logout
 	public function logout() {
 		Auth::logout();
+	}
+
+	// Auth check
+	public function auth_check() {
+		if (Auth::check()) return response(200, true);
+		else return response(200, false);
 	}
 
 }

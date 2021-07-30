@@ -1,8 +1,17 @@
 <?php
 // Simple router
 class Route {
-	// Array of routes
+	// Array of routes and groups routes
 	private static $routes = array();
+	private static $groups = array();
+
+	// Adding middleware
+	public static function middleware($filename, $callback) {
+		self::$groups[$filename] = array();
+		$routes = $callback();
+		// var_dump(self::$routes);
+		// var_dump(is_callable(self::$routes["GET"]["/api/test/"]));
+	}
 
 	// Adding a route with a data type GET
 	public static function get($route, $param) {
