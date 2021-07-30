@@ -1,4 +1,7 @@
 <?php
+// Including files
+include "config/rand.php";
+
 class DB {
 	private static $dbhost = "localhost";
 	private static $dbuser = "root";

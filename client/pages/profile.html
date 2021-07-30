@@ -20,21 +20,14 @@
 			out = `<p><b>Имя пользователя:</b> ${data.data.username}</p><p><b>Роль:</b> ${data.data.role}</p>`;
 			$("#personal_inform").html(out);
 		}, null, "api/user");
-
-		// Test
-		request.get((data) => {
-			console.log(data);
-		}, null, "api/test");
 	});
 
 	// Adding a profile picture
 	function update_picture() {
-		let formData = new FormData();
-		let image = $("input[name=picture]").prop("files")[0];
-		formData.append("picture", image);
+		let formData = new FormData($("form#update_picture")[0]);
 		request.post((data) => {
 			console.log(data);
-		}, formData, "api/user/update/avatar");
+		}, formData, "api/user/update/avatar", true);
 	}
 </script>
 

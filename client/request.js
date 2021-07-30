@@ -21,7 +21,7 @@ let request = {
 		// Sending data
 		xhr.send(data);
 	},
-	post: function(callback, data, url) {
+	post: function(callback, data, url, formData) {
 		let xhr = new XMLHttpRequest();
 		// Opening an asynchronous XMLHttpRequest request
 		xhr.open("POST", url, true);
@@ -34,12 +34,11 @@ let request = {
 		}
 		// Headers
 		this.headers(xhr);
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		if (formData != true)
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.setRequestHeader('X-CSRF-Token', '');
+		
 		// Sending data
 		xhr.send(data);
-	},
-	formData: function(callback, data, url) {
-		
 	}
 }

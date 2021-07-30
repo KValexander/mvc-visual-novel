@@ -45,8 +45,16 @@ function validator($data, $arr) {
 				// Max
 				case preg_match("/max:/", $val) == true:
 					$max = explode(":", $val);
-					if (strlen($data[$key]) > (int)$max[1])
-						$errors->errors[$key] = "Поле не должно превышать ". $max[1] ." символов";
+					// Image check
+					if ($data[$key]["tmp_name"] != "")
+						if(getimagesize($data[$key]["tmp_name"])) {
+							$size = filesize($data[$key]["tmp_name"]) / 1024;
+							if ($size > (int)$max[1])
+								$errors->errors[$key] = "Файл не должен превышать ". $max[1] ." килобайт";
+					// Checking text data
+					} else
+						if (strlen($data[$key]) > (int)$max[1])
+							$errors->errors[$key] = "Поле не должно превышать ". $max[1] ." символов";
 					break;
 
 				// Unique
@@ -63,6 +71,14 @@ function validator($data, $arr) {
 					$coincidence = explode(":", $val);
 					if ($data[$key] != $data[$coincidence[1]])
 						$errors->errors[$key] = "Поля не совпадают";
+					break;
+
+				// Image
+				case "image":
+					if ($data[$key]["tmp_name"] != "")
+						if (!getimagesize($data[$key]["tmp_name"]))
+							$errors->errors[$key] = "Файл не является изображением";
+					else $errors->errors[$key] = "Файл не загружен";
 					break;
 			}
 		}

@@ -1,5 +1,9 @@
 <?php
 	include "config/route.php";
+
+	// Route::get("route", function(){});
+	// Route::post("route", "Controller/method");
+
 	// Middleware
 	Route::middleware("AuthMiddleware", function() {
 		Route::get("/api/test", function() {

@@ -4,13 +4,14 @@
 
 	// Including files
 	include "config/database.php";
-	include "config/rand.php";
+	include "config/response.php";
+	include "config/request.php";
 	include "routes.php";
 
 	// Database connection
 	DB::connect();
 
-	// Headers 
+	// Headers
 	header("Access-Control-Allow-Origin: *");
 	header("Content-Type:application/json;charset=UTF-8");
 
@@ -19,7 +20,7 @@
 		// Getting route value
 		$route = Route::give($_SERVER["REQUEST_METHOD"], $_SERVER["REDIRECT_URL"]);
 		// If passed function
-		if (is_callable($route)) return $route($_REQUEST);
+		if (is_callable($route)) return $route();
 
 		// Retrieving parameters
 		$params = explode("/", $route);
@@ -37,7 +38,7 @@
 
 		$method = (string)$params[1];
 
-		return $controller->$method($_REQUEST);
+		return $controller->$method();
 	} else exit("Route not found");
 
 ?>

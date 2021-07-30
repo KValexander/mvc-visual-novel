@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июл 27 2021 г., 11:59
+-- Время создания: Июл 30 2021 г., 17:04
 -- Версия сервера: 10.3.22-MariaDB
 -- Версия PHP: 7.3.17
 
@@ -71,14 +71,23 @@ CREATE TABLE `genres` (
 CREATE TABLE `images` (
   `image_id` int(11) NOT NULL,
   `foreign_id` int(11) NOT NULL,
-  `path_to_image` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` int(11) NOT NULL,
-  `extension` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `usage` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `path_to_image` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` int(11) DEFAULT NULL,
+  `extension` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `affiliation` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `images`
+--
+
+INSERT INTO `images` (`image_id`, `foreign_id`, `usage`, `path_to_image`, `name`, `type`, `size`, `extension`, `affiliation`, `created_at`, `update_at`) VALUES
+(2, 57, 'avatar', NULL, NULL, NULL, NULL, NULL, 'users', '2021-07-30 13:47:25', '2021-07-30 13:47:25');
 
 -- --------------------------------------------------------
 
@@ -101,6 +110,7 @@ CREATE TABLE `novels` (
   `age_rating` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `country` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `language` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 0,
   `delete_marker` int(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -139,6 +149,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`user_id`, `username`, `email`, `login`, `password`, `remember_token`, `role`, `online`, `state`, `delete_marker`, `created_at`, `updated_at`) VALUES
+(57, 'ewoase', '1@1', 'ewoase', '$1$xc5MVOiD$yyKlavfgY83S3rZt/fthg.', 'lws75qCR05dqkj1dk0KYkuHueL8IP9G6yLKrx1GcIaLWc7sYGo', 'user', 0, 0, 0, '2021-07-30 13:47:25', '2021-07-30 13:47:30');
 
 --
 -- Индексы сохранённых таблиц
@@ -220,7 +237,7 @@ ALTER TABLE `genres`
 -- AUTO_INCREMENT для таблицы `images`
 --
 ALTER TABLE `images`
-  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `novels`
@@ -238,7 +255,7 @@ ALTER TABLE `novels-genres`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
