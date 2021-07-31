@@ -18,7 +18,7 @@ class AuthController {
 
 		// If there are validation errors
 		if ($validator->fails) {
-			$data = (object)[
+			$data = [
 				"message" => "Ошибка валидации",
 				"errors" => $validator->errors
 			];
@@ -39,7 +39,7 @@ class AuthController {
 		$insert_sql = sprintf("INSERT INTO `users`(`username`, `email`, `login`, `password`, `role`) VALUES ('%s', '%s', '%s', '%s', '%s')", DB::$connect->real_escape_string($username), DB::$connect->real_escape_string($email), DB::$connect->real_escape_string($login), DB::$connect->real_escape_string($password), DB::$connect->real_escape_string($role));
 		// Adding and validating data insertion
 		if(!DB::query($insert_sql)) {
-			$data = (object)["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
+			$data = ["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
 			return response(400, $data);
 		}
 		
@@ -47,12 +47,12 @@ class AuthController {
 		$insert_sql = sprintf("INSERT INTO `images`(`foreign_id`, `usage`, `affiliation`) VALUES ('%d', '%s', '%s')", DB::$connect->insert_id, "avatar", "users");
 		// Adding and validating data insertion
 		if(!DB::query($insert_sql)) {
-			$data = (object)["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
+			$data = ["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
 			return response(400, $data);
 		}
 
 		// In case of successful data insertion
-		$data = (object)["message" => "Аккаунт успешно зарегистрирован"];
+		$data = ["message" => "Аккаунт успешно зарегистрирован"];
 		return response(200, $data);
 	}
 
@@ -66,7 +66,7 @@ class AuthController {
 
 		// If there are validation errors
 		if($validator->fails) {
-			$data = (object)[
+			$data = [
 				"message" => "Ошибка валидации",
 				"errors" => $validator->errors
 			];
@@ -80,13 +80,13 @@ class AuthController {
 		// Authorization check
 		if(Auth::attempt(["login" => $login, "password" => $password], true)) {
 			$token = Auth::token();
-			$data = (object)[
+			$data = [
 				"message" => "Вы успешно авторизировались",
 				"token" => $token
 			];
 			return response(200, $data);
 		} else {
-			$data = (object)["message" => "Ошибка логина или пароля"];
+			$data = ["message" => "Ошибка логина или пароля"];
 			return response(401, $data);
 		}
 	}

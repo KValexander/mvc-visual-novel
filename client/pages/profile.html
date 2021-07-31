@@ -22,11 +22,13 @@
 		}, null, "api/user");
 	});
 
-	// Adding a profile picture
+	// Update a profile picture
 	function update_picture() {
 		let formData = new FormData($("form#update_picture")[0]);
 		request.post((data) => {
-			console.log(data);
+			data = JSON.parse(data);
+			message.show(data.data.message);
+			$("input[name=picture]").val("");
 		}, formData, "api/user/update/avatar", true);
 	}
 </script>

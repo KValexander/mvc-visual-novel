@@ -46,11 +46,13 @@ function validator($data, $arr) {
 				case preg_match("/max:/", $val) == true:
 					$max = explode(":", $val);
 					// Image check
-					if ($data[$key]["tmp_name"] != "")
-						if(getimagesize($data[$key]["tmp_name"])) {
+					if(isset($data[$key]["name"])) {
+						$check = check_image($data[$key]);
+						if ($check === true) {
 							$size = filesize($data[$key]["tmp_name"]) / 1024;
 							if ($size > (int)$max[1])
 								$errors->errors[$key] = "Файл не должен превышать ". $max[1] ." килобайт";
+						}
 					// Checking text data
 					} else
 						if (strlen($data[$key]) > (int)$max[1])
@@ -75,10 +77,20 @@ function validator($data, $arr) {
 
 				// Image
 				case "image":
-					if ($data[$key]["tmp_name"] != "")
-						if (!getimagesize($data[$key]["tmp_name"]))
-							$errors->errors[$key] = "Файл не является изображением";
-					else $errors->errors[$key] = "Файл не загружен";
+					$check = check_image($data[$key]);
+					if ($check != true)
+						$errors->errors[$key] = $check;
+					break;
+
+				// Mimes
+				case preg_match("/mimes:/", $val) == true:
+					$check = check_image($data[$key]);
+					if ($check === true) {
+						$mimes = explode(",", explode(":", $val)[1]);
+						$extension = explode(".", $data[$key]["name"])[1];
+						if(array_search($extension, $mimes) === false)
+							$errors->errors[$key] = "Расширение изображения не подходит";
+					} else $errors->errors[$key] = $check;
 					break;
 			}
 		}
@@ -92,5 +104,18 @@ function validator($data, $arr) {
 
 	// Returning an error object
 	return $errors;
+}
+
+// Checking a file for an image
+function check_image($data) {
+	if (isset($data["error"])) {
+		if ($data["error"] != UPLOAD_ERR_OK) {
+			return "Файл не загружен";
+		} else {
+			$file = @getimagesize($data["tmp_name"]);
+			if ($file == false) return "Файл не является изображением";
+			else return true;
+		}
+	} else return "Данные не являются файлом";
 }
 ?>
