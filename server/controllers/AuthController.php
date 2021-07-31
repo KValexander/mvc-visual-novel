@@ -35,21 +35,23 @@ class AuthController {
 		// Default data
 		$role = "user";
 
-		// Composing a request to add data to the database
-		$insert_sql = sprintf("INSERT INTO `users`(`username`, `email`, `login`, `password`, `role`) VALUES ('%s', '%s', '%s', '%s', '%s')", DB::$connect->real_escape_string($username), DB::$connect->real_escape_string($email), DB::$connect->real_escape_string($login), DB::$connect->real_escape_string($password), DB::$connect->real_escape_string($role));
-		// Adding and validating data insertion
-		if(!DB::query($insert_sql)) {
-			$data = ["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
-			return response(400, $data);
-		}
-		
-		// Request to add an avatar entry
-		$insert_sql = sprintf("INSERT INTO `images`(`foreign_id`, `usage`, `affiliation`) VALUES ('%d', '%s', '%s')", DB::$connect->insert_id, "avatar", "users");
-		// Adding and validating data insertion
-		if(!DB::query($insert_sql)) {
-			$data = ["message" => "Ошибка вставки данных", "error" => DB::$connect->error];
-			return response(400, $data);
-		}
+		// Adding data to the database
+		$id = DB::table("users")->insert_id([
+			"username" => $username,
+			"email" => $email,
+			"login" => $login,
+			"password" => $password,
+			"role" => $role,
+		]);
+		if (!$id) return response(400, DB::$connect->error);
+
+		// Adding data to the database
+		$insert = DB::table("images")->insert([
+			"foreign_id" => $id,
+			"usage" => "avatar",
+			"affiliation" => "users"
+		]);
+		if (!$insert) return response(400, DB::$connect->error);
 
 		// In case of successful data insertion
 		$data = ["message" => "Аккаунт успешно зарегистрирован"];

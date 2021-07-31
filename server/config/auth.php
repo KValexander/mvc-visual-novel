@@ -21,23 +21,21 @@ class Auth {
 				if(hash_equals(self::$user[$key], crypt($val, self::$user[$key]))) continue;
 				else return false;
 			else {
-				// Sending a request
-				$data = DB::query(sprintf("SELECT `%s` FROM `%s` WHERE `%s`='%s'", $key, self::$table, $key, $val));
-				// Retrieving data from a request
-				$row = $data->fetch_assoc()[$key];
+				$data = DB::table(self::$table)->where($key, $val)->select($key)->first()[$key];
 				// Checking for the presence of data
-				if ($row == NULL) return false;
+				if ($data == NULL) return false;
 
 				// Getting a user
-				$sql = sprintf("SELECT * FROM `%s` WHERE `%s`='%s'", self::$table, $key, $val);
-				self::$user = DB::query($sql)->fetch_assoc();
+				self::$user = DB::table(self::$table)->where($key, $val)->first();
 
 				// Remember token
 				if($state == true) {
 					$token = Rand::string(50);
-					DB::query(sprintf("UPDATE `%s` SET `%s`='%s' WHERE `%s`='%s'", self::$table, self::$field_token, $token, self::$primary_key, self::$user[self::$primary_key]));
+					DB::table(self::$table)->where(self::$primary_key, self::$user[self::$primary_key])->update([
+						self::$field_token => $token
+					]);
 				}
-				$_SESSION["id"] = self::$user["user_id"];
+				$_SESSION["id"] = self::$user[self::$primary_key];
 			}
 		}
 		return true;
@@ -46,7 +44,7 @@ class Auth {
 	// Retrieving Authorized User Data
 	public static function user() {
 		if (isset($_SESSION["id"])) {
-			self::$user = DB::query(sprintf("SELECT * FROM `%s` WHERE `%s`='%s'", self::$table, self::$primary_key, $_SESSION["id"]))->fetch_assoc();
+			self::$user = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->first();
 			// In any case, self::$user will contain either data or NULL
 			return self::$user;
 		}
@@ -55,7 +53,7 @@ class Auth {
 
 	// Returning an encrypted token
 	public static function token() {
-		$result = DB::query(sprintf("SELECT `%s` FROM `%s` WHERE `%s`='%s'", self::$field_token, self::$table, self::$primary_key, $_SESSION["id"]))->fetch_assoc();
+		$result = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->select(self::$field_token)->first();
 		if ($result != NULL) return crypt($result[self::$field_token]);
 		else return NULL;
 	}
@@ -77,7 +75,7 @@ class Auth {
 
 	// Returning an unencrypted token
 	private static function db_token() {
-		$db_token = DB::query(sprintf("SELECT `%s` FROM `%s` WHERE `%s`='%s'", self::$field_token, self::$table, self::$primary_key, $_SESSION["id"]))->fetch_assoc();
+		$db_token = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->select(self::$field_token)->first();
 		return $db_token[self::$field_token];
 	}
 

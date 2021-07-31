@@ -32,6 +32,13 @@ class UserController {
 			return response(422, $data);
 		}
 
+		// Retrieving user data
+		$user = Auth::user();
+
+		// Retrieving a record to delete a past photo
+		$image = DB::table("images")->where("foreign_id", $user["user_id"])->select("path_to_image")->first();
+		if($image["path_to_image"] != NULL) unlink($image["path_to_image"]);
+
 		// Retrieving image data
 		$image = Request::input("picture");
 		$extension = explode(".", $image["name"])[1];
@@ -43,10 +50,6 @@ class UserController {
 		// Uploading an image to the server
 		if(!move_uploaded_file($image["tmp_name"], $path_to_image))
 			return response(400, (object)["message" => "Ошибка сохранения изображения"]);
-		$path_to_image = "server/". $path_to_image;
-
-		// Retrieving user data
-		$user = Auth::user();
 
 		// Updating data in the database
 		DB::table("images")->where("foreign_id", $user["user_id"])->update([
@@ -59,7 +62,6 @@ class UserController {
 
 		// In case of success of inserting and changing data
 		return response(200, ["message" => "Данные успешно обновлены"]);
-
 	}
 }
 ?>
