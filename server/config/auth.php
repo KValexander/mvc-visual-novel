@@ -21,17 +21,17 @@ class Auth {
 				if(hash_equals(self::$user[$key], crypt($val, self::$user[$key]))) continue;
 				else return false;
 			else {
-				$data = DB::table(self::$table)->where($key, $val)->select($key)->first()[$key];
+				$data = DB::table(self::$table)->where($key, "=", $val)->select($key)->first()[$key];
 				// Checking for the presence of data
 				if ($data == NULL) return false;
 
 				// Getting a user
-				self::$user = DB::table(self::$table)->where($key, $val)->first();
+				self::$user = DB::table(self::$table)->where($key, "=", $val)->first();
 
 				// Remember token
 				if($state == true) {
 					$token = Rand::string(50);
-					DB::table(self::$table)->where(self::$primary_key, self::$user[self::$primary_key])->update([
+					DB::table(self::$table)->where(self::$primary_key, "=", self::$user[self::$primary_key])->update([
 						self::$field_token => $token
 					]);
 				}
@@ -44,7 +44,7 @@ class Auth {
 	// Retrieving Authorized User Data
 	public static function user() {
 		if (isset($_SESSION["id"])) {
-			self::$user = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->first();
+			self::$user = DB::table(self::$table)->where(self::$primary_key, "=", $_SESSION["id"])->first();
 			// In any case, self::$user will contain either data or NULL
 			return self::$user;
 		}
@@ -53,7 +53,7 @@ class Auth {
 
 	// Returning an encrypted token
 	public static function token() {
-		$result = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->select(self::$field_token)->first();
+		$result = DB::table(self::$table)->where(self::$primary_key, "=", $_SESSION["id"])->select(self::$field_token)->first();
 		if ($result != NULL) return crypt($result[self::$field_token]);
 		else return NULL;
 	}
@@ -75,7 +75,7 @@ class Auth {
 
 	// Returning an unencrypted token
 	private static function db_token() {
-		$db_token = DB::table(self::$table)->where(self::$primary_key, $_SESSION["id"])->select(self::$field_token)->first();
+		$db_token = DB::table(self::$table)->where(self::$primary_key, "=", $_SESSION["id"])->select(self::$field_token)->first();
 		return $db_token[self::$field_token];
 	}
 

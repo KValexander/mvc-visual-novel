@@ -24,6 +24,9 @@
 	// Logout
 	Route::get("/api/logout", "AuthController/logout");
 
+	// Get all user
+	Route::get("/api/get/users", "ModerationController/getUsers");
+
 	// Auth check
 	Route::post("/api/auth/check", "AuthController/auth_check");
 ?>

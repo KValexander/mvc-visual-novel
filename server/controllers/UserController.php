@@ -8,13 +8,22 @@ class UserController {
 	// Getting a user's role
 	public function get_role() {
 		$user = Auth::user();
-		if ($user != NULL) return response(200, $user["role"]);
-		else return response(200, NULL);
+		$role = array();
+		$role["code"] = $user["role"];
+		switch($role["code"]) {
+			case "admin": $role["role"] = "Администратор"; break;
+			case "moderator": $role["role"] = "Модератор"; break;
+			case "user": $role["role"] = "Пользователь"; break;
+			default: $role = NULL; break;
+		}
+		return response(200, $role);
 	}
 
 	// Retrieving Authorized User Data
 	public function get_user() {
-		return response(200, Auth::user());
+		$user = Auth::user();
+		$user["image"] = DB::table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first()["path_to_image"];
+		return response(200, $user);
 	}
 
 	// Updating user avatar
@@ -36,7 +45,7 @@ class UserController {
 		$user = Auth::user();
 
 		// Retrieving a record to delete a past photo
-		$image = DB::table("images")->where("foreign_id", $user["user_id"])->select("path_to_image")->first();
+		$image = DB::table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first();
 		if($image["path_to_image"] != NULL) unlink($image["path_to_image"]);
 
 		// Retrieving image data
@@ -52,7 +61,7 @@ class UserController {
 			return response(400, (object)["message" => "Ошибка сохранения изображения"]);
 
 		// Updating data in the database
-		DB::table("images")->where("foreign_id", $user["user_id"])->update([
+		DB::table("images")->where("foreign_id", "=", $user["user_id"])->update([
 			"path_to_image" => $path_to_image,
 			"name" => $image_name,
 			"type" => $type,

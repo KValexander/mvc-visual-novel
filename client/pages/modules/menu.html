@@ -1,7 +1,7 @@
 <script>
 	request.get((data) => {
 		data = JSON.parse(data);
-		role = (data.data == null) ? "guest" : data.data;
+		role = (data.data == null) ? "guest" : data.data.code;
 
 		if (role == "guest") { 
 			out = `

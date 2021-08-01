@@ -24,8 +24,10 @@ function validator($data, $arr) {
 
 				// String
 				case "string":
-					if (!is_string($data[$key]))
+					if (!is_string($data[$key])) {
+						var_dump("Какого хера?", $data[$key], $key, $data);
 						$errors->errors[$key] = "Поле должно являться строкой";
+					}
 					break;
 
 				// Email
@@ -63,9 +65,8 @@ function validator($data, $arr) {
 				case preg_match("/unique:/", $val) == true:
 					$unique = explode(":", $val);
 					$unique = explode(",", $unique[1]);
-					$sql = sprintf("SELECT `%s` FROM `%s` WHERE `%s`='%s'", $unique[1], $unique[0], $unique[1], $data[$key]);
-					$result = DB::query($sql);
-					if ($result->fetch_assoc() != NULL) $errors->errors[$key] = "Такое значение уже есть в нашей базе";
+					$availability = DB::table($unique[0])->where($unique[1], "=", $data[$key])->select($unique[1])->first();
+					if ($availability != NULL) $errors->errors[$key] = "Такое значение уже есть в нашей базе";
 				break;
 
 				// Coincidence

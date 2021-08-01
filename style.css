@@ -5,6 +5,7 @@
 }
 
 body {
+	min-width: 600px;
 	font-size: 14pt;
 	font-family: Arial;
 	background-color: #f3f3f3;
@@ -34,6 +35,10 @@ a:hover {
 
 hr {
 	border: solid 2px #3399FF;
+}
+
+img {
+	max-width: 100%;
 }
 
 div#app {
@@ -231,7 +236,7 @@ nav.tabs div:hover {
 	color: white;
 }
 
-div.content div.right {
+div.content div.left {
 	width: 68%;
 	padding: 20px;
 	border-radius: 5px;
@@ -239,7 +244,7 @@ div.content div.right {
 	background-color: rgba(255,255,255, 0.9);
 }
 
-div.content div.left {
+div.content div.right {
 	margin-left: 2%;
 	width: 30%;
 	padding: 20px;
@@ -264,6 +269,25 @@ div.profile nav.actions p {
 div.profile nav.actions p.notice {
 	margin: 0;
 	padding: 0;
+}
+
+div.profile div#personal_inform {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+div.profile div#personal_inform div.image {
+	width: 30%;
+	overflow: hidden;
+	border-radius: 5px;
+	margin-right: 3%;
+}
+div.profile div#personal_inform div.image img {
+	height: 100%;
+	object-fit: cover;
+}
+div.profile div#personal_inform div.inform p{
+	padding: 5px 0;
 }
 
 /*==============================================*/

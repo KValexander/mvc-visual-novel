@@ -1,0 +1,14 @@
+<script>
+	// Check for authorization with access rights
+	auth.check(() => {
+		// Get all users
+		request.get(data => {
+			data = JSON.parse(data);
+			console.log(data);
+		}, null, "api/get/users");
+	}, true);
+</script>
+
+<div class="content">
+	<h2>На данный момент контент отсутствует</h2>
+</div>

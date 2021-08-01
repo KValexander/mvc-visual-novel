@@ -39,7 +39,6 @@ let auth = {
 			data = JSON.parse(data);
 			$("input").removeClass("err");
 			$("p.error").html("").removeClass("error_acc");
-
 			// Handling a successful registration
 			if(data.status == 200) {
 				message.show(data.data.message);
@@ -53,13 +52,32 @@ let auth = {
 	},
 
 	// Authorization check
-	check: function(callback) {
+	check: function(callback, moder=false, admin=false) {
 		request.post(data => {
 			data = JSON.parse(data);
 			if (data.data != true) {
 				message.show("Вы не авторизованы");
 				return route.redirect("auth/login");
-			} else callback();
+			} else  {
+				if (moder) {
+					request.get(data => {
+						data = JSON.parse(data);
+						if (data.data.code == "moderator" || data.data.code == "admin") {
+							if (admin) {
+								if(data.data.code == "admin") callback();
+								else {
+									message.show("Доступ запрещён");
+									return route.redirect("profile");
+								}
+							} else callback();
+						} else {
+							message.show("Доступ запрещён");
+							return route.redirect("profile");
+						}
+
+					}, null, "api/role");
+				} else callback();
+			};
 		}, null, "api/auth/check");
 	},
 
@@ -80,6 +98,7 @@ let auth = {
 	// Logout
 	logout: function() {
 		request.get((data) => {
+			localStorage.clear();
 			route.attach_module("client/pages/modules/menu.html", "menu");
 			route.redirect("index");
 			message.show("Вы вышли");

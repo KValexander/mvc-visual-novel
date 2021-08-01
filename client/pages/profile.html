@@ -1,33 +1,58 @@
 <script>
-	// Page tab
-	$(".wrap .tab_content").css("display", "none");
-	$(".right .wrap .tab_content").eq(0).fadeIn(100);
-	$(".left .wrap .tab_content").eq(0).fadeIn(100);
-	$(".tabs div").click(function() {
-		$(".wrap .tab_content").css("display", "none");
-		$(".tabs div").removeClass("active");
-		$(".right .wrap .tab_content").eq($(this).index()).fadeIn(200);
-		$(".left .wrap .tab_content").eq($(this).index()).fadeIn(200);
-		$(this).addClass("active");
-	});
-
 	// Authorization check
 	auth.check(() => {
+		page_tab();
+		load_data();
+	});
+
+	// Page tab
+	function page_tab() {
+		let index = localStorage.getItem("tab_index");
+		if (index == null) index = 0;
+		$(".wrap .tab_content").css("display", "none");
+		$(".tabs div").eq(index).addClass("active");
+		$(".left .wrap .tab_content").eq(index).fadeIn(100);
+		$(".right .wrap .tab_content").eq(index).fadeIn(100);
+		$(".tabs div").click(function() {
+			localStorage.setItem("tab_index", $(this).index());
+			$(".wrap .tab_content").css("display", "none");
+			$(".tabs div").removeClass("active");
+			$(".left .wrap .tab_content").eq($(this).index()).fadeIn(200);
+			$(".right .wrap .tab_content").eq($(this).index()).fadeIn(200);
+			$(this).addClass("active");
+		});
+	}
+
+	// Receiving and loading user data
+	function load_data() {
 		// Retrieving Authorized User Data
 		request.get((data) => {
 			// Data parsing
 			data = JSON.parse(data);
-			out = `<p><b>Имя пользователя:</b> ${data.data.username}</p><p><b>Роль:</b> ${data.data.role}</p>`;
+			out = "";
+			if (data.data.image != null) out += `<div class="image"><img src="server/${data.data.image}" /></div>`;
+			out += `
+				<div class="inform">
+					<h2>${data.data.username}</h2>
+					<p><b>Роль:</b> ${data.data.role}</p>
+				</div>
+			`;
 			$("#personal_inform").html(out);
 		}, null, "api/user");
-	});
+	}
 
 	// Update a profile picture
 	function update_picture() {
 		let formData = new FormData($("form#update_picture")[0]);
 		request.post((data) => {
 			data = JSON.parse(data);
-			message.show(data.data.message);
+			if(data.status == 200) {
+				load_data();
+				message.show(data.data.message);
+			}
+			else if(data.status == 422) {
+				message.show(data.data.errors.picture);
+			}
 			$("input[name=picture]").val("");
 		}, formData, "api/user/update/avatar", true);
 	}
@@ -35,9 +60,9 @@
 
 <div class="content">
 	<div class="profile">
-		<div class="right">
+		<div class="left">
 			<nav class="tabs">
-				<div class="active">Страница</div>
+				<div>Страница</div>
 				<div>Избранное</div>
 				<div>Добавить новеллу</div>
 				<div>На модерации</div>
@@ -166,7 +191,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="left">
+		<div class="right">
 			<div class="wrap">
 				<div class="tab_content">
 					<nav class="actions">

@@ -17,6 +17,8 @@ class DB {
 	private static $where_state = false;
 	private static $select = "*";
 	private static $select_state = false;
+	private static $orderby = "";
+	private static $orderby_state = false;
 
 	// Connection to base
 	public static function connect() {
@@ -44,9 +46,21 @@ class DB {
 	}
 
 	// Selecting a table by attribute
-	public static function where($field, $value) {
+	public static function where($field, $condition, $value) {
 		self::$where_state = true;
-		self::$where = sprintf("WHERE `%s`='%s'", $field, $value);
+		self::$where = sprintf("WHERE `%s`%s'%s'", $field, $condition, $value);
+		return new self;
+	}
+
+	// Additional condition
+	public static function andWhere($field, $condition, $value) {
+		self::$where .= sprintf(" AND `%s`%s'%s'", $field, $condition, $value);
+		return new self;
+	}
+
+	// Additional condition
+	public static function orWhere($filed, $condition, $value) {
+		self::$where .= sprintf(" OR `%s`%s'%s'", $field, $condition, $value);
 		return new self;
 	}
 
@@ -66,17 +80,22 @@ class DB {
 		return new self;
 	}
 
+	// Order by
+	public static function orderBy($value, $type) {
+		self::$orderby_state = true;
+		self::$orderby = sprintf("ORDER BY `%s` %s", $value, $type);
+		return new self;
+	}
+
 	// Get data
 	public function get() {
-		if(self::$table_state) $table = self::$table;
-		else $table = "";
-		if(self::$where_state) $where = self::$where;
-		else $where = "";
-		if(self::$select_state) $select = self::$select;
-		else $select = "*";
-		$array = [];
-		$query = sprintf("SELECT %s FROM %s %s", $select, $table, $where);
+		$table = (self::$table_state) ? self::$table : "";
+		$where = (self::$where_state) ? self::$where : "";
+		$select = (self::$select_state) ? self::$select : "*";
+		$orderby = (self::$orderby_state) ? self::$orderby : "";
+		$query = sprintf("SELECT %s FROM %s %s %s", $select, $table, $where, $orderby);
 		$result = self::query($query);
+		$array = [];
 		while($row = $result->fetch_assoc())
 			array_push($array, $row);
 		return $array;
@@ -84,13 +103,11 @@ class DB {
 
 	// Get first data
 	public static function first() {
-		if(self::$table_state) $table = self::$table;
-		else $table = "";
-		if(self::$where_state) $where = self::$where;
-		else $where = "";
-		if(self::$select_state) $select = self::$select;
-		else $select = "*";
-		$query = sprintf("SELECT %s FROM %s %s", $select, $table, $where);
+		$table = (self::$table_state) ? self::$table : "";
+		$where = (self::$where_state) ? self::$where : "";
+		$select = (self::$select_state) ? self::$select : "*";
+		$orderby = (self::$orderby_state) ? self::$orderby : "";
+		$query = sprintf("SELECT %s FROM %s %s %s", $select, $table, $where, $orderby);
 		return self::query($query)->fetch_assoc();
 	}
 
@@ -131,6 +148,13 @@ class DB {
 			$counter++;
 		}
 		$query = sprintf("UPDATE `%s` SET %s %s", self::$table, $string, self::$where);
+		if(!self::query($query)) return false;
+		else return true;
+	}
+
+	// Delete data
+	public static function delete() {
+		$query = sprintf("DELETE FROM `%s` %s", self::$table, self::$where);
 		if(!self::query($query)) return false;
 		else return true;
 	}
