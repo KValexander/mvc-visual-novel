@@ -102,8 +102,8 @@ form fieldset {
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
-form input,
-form select {
+input,
+select {
 	width: 100%;
 	outline: none;
 	margin: 10px 0;
@@ -152,19 +152,19 @@ form input[type=submit] {
 	background-color: #3399FF;
 	transition: .2s;
 }
-form input:focus,
-form textarea:focus {
+input:focus,
+textarea:focus {
 	border: solid 1px #3399FF;
 	box-shadow: 0 0 3px rgba(51,153,255,0.5);
 }
-form input[type=button]:focus,
-form input[type=submit]:focus {
+input[type=button]:focus,
+input[type=submit]:focus {
 	border: none;
 	/*background-color: #FF6600;*/
 }
 
-form input[type=button]:hover,
-form input[type=submit]:hover {
+input[type=button]:hover,
+input[type=submit]:hover {
 	background-color: #FF6600;
 }
 
@@ -289,7 +289,50 @@ div.profile div#personal_inform div.image img {
 div.profile div#personal_inform div.inform p{
 	padding: 5px 0;
 }
+/*==============================================*/
 
+/*Moderation*/
+/*==============================================*/
+div.moderation {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+div.moderation div#user_inform {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+div.moderation div#user_inform div.user,
+div.moderation div#user_inform div.head {
+	display: flex;
+	justify-content: space-between;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	border-radius: 25px;
+	padding: 10px;
+	margin: 10px 0;
+	max-height: 42px;
+}
+div.moderation div#user_inform div.user div:first-child,
+div.moderation div#user_inform div.head h4:first-child {
+	width: 5%;
+}
+div.moderation div#user_inform div.user div,
+div.moderation div#user_inform div.head h4 {
+	width: 20%;
+}
+
+div.moderation nav.actions {
+	display: flex;
+	text-align: right;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+div.moderation nav.actions div{
+	margin: 10px 0;
+	font-size: 16pt;
+}
 /*==============================================*/
 
 #message {

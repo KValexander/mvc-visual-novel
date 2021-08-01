@@ -1,0 +1,41 @@
+<script>
+	// Get users
+	get_users();
+
+	// Get users
+	function get_users() {
+		request.get(data => {
+			data = JSON.parse(data);
+			out_users_data(data);
+		}, null, "api/get/users");
+	}
+
+	// Output user data
+	function out_users_data(data) {
+		out = `
+			<div class="head">
+				<h4>ID</h4>
+				<h4>Username</h4>
+				<h4>Email</h4>
+				<h4>Login</h4>
+				<h4>Actions</h4>
+			</div>
+		`;
+		data.data.forEach(user => {
+			out += `
+				<div class="user">
+					<div class="id">${user.user_id}</div>
+					<div class="username">${user.username}</div>
+					<div class="email">${user.email}</div>
+					<div class="login">${user.login}</div>
+					<div class="actions"><a class="underline">Del</a> | <a class="underline">Ban</a> | <a class="underline">Upd</a></div>
+				</div>
+			`;
+		});
+		$("#user_inform").html(out);
+	}
+</script>
+
+<h2>Информация о пользователях</h2>
+<input type="text" class="search" placeholder="Найти пользователя">
+<div id="user_inform"></div>

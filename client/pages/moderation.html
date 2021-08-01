@@ -1,0 +1,21 @@
+<script>
+	// Check for authorization with access rights
+	auth.check(() => {
+		route.attach_module("client/pages/moderation/users.html", "moderation_content");
+	}, true);
+</script>
+
+<div class="content">
+	<div class="moderation">
+		<div class="left" id="moderation_content"></div>
+		<div class="right">
+			<nav class="actions">
+				<h2>Меню модерации</h2>
+				<hr><br>
+				<div><a onclick='route.attach_module("client/pages/moderation/novels.html", "moderation_content")'>Модерация новелл</a></div>
+				<div><a onclick='route.attach_module("client/pages/moderation/users.html", "moderation_content")'>Пользователи</a></div>
+				<div><a onclick='route.attach_module("client/pages/moderation/directories.html", "moderation_content")'>Справочники</a></div>
+			</nav>
+		</div>
+	</div>
+</div>
