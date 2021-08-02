@@ -1,3 +1,12 @@
+<script>
+	request.get(data => {
+		console.log("With middleware: " + data);
+	}, null, "api/test");
+	request.get(data => {
+		console.log("Withuout middleware: " + data);
+	}, null, "api/test2");
+</script>
+
 <div class="content">
 	<h1>Главная страница</h1><br>
 

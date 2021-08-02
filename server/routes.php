@@ -11,6 +11,10 @@
 		});
 	});
 
+	Route::get("/api/test2", function() {
+		echo "test2";
+	});
+
 	// Register
 	Route::post("/api/register", "AuthController/register");
 	// Login

@@ -1,0 +1,14 @@
+<script>
+	load_left();
+	load_right();
+	function load_left() {
+		out = `
+			<h2>Новеллы на модерации</h2><br>
+			<h3>На данный момент информация отсутствует</h3>
+		`;
+		$(".left .wrap .tab_content").html(out);
+	}
+	function load_right() {
+		$(".right .wrap .tab_content").html("");
+	}
+</script>

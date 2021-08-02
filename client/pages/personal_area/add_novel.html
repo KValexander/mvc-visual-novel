@@ -1,0 +1,111 @@
+<script>
+	load_left();
+	load_right();
+	function load_left() {
+		out = `
+			<h2>Добавление новеллы</h2>
+			<div class="add_novel">
+				<!-- Adding a novel -->
+				<form onsubmit="return false">
+					<!-- Novel titles -->
+					<fieldset>
+						<legend>Названия</legend>
+						<p class="error" id="title"></p>
+						<input type="text" placeholder="Название" name="title">
+						<input type="text" placeholder="Оригинальное название" name="original_title">
+						<input type="text" placeholder="Альтернативное название" name="alternative_title">
+					</fieldset>
+					<!-- Novel images -->
+					<fieldset>
+						<legend>Изображения</legend>
+						<p>Обложка новеллы</p>
+						<p class="error" id="cover"></p>
+						<input type="file" name="cover">
+						<p>Скриншот новеллы</p>
+						<div class="part">
+							<input type="file">
+							<input type="button" value="Добавить">
+						</div>
+						<div class="screenshots">
+							Добавьте скриншот
+						</div>
+					</fieldset>
+					<!-- Developer, release year and description -->
+					<fieldset>
+						<legend>Разработчик, год релиза и описание</legend>
+						<p class="error" id="developer"></p>
+						<input type="text" placeholder="Разработчик" name="developer">
+						<input type="number" placeholder="Год релиза" name="year_release">
+						<textarea placeholder="Описание" name="description"></textarea>
+					</fieldset>
+					<!-- Genres -->
+					<fieldset>
+						<legend>Жанры</legend>
+						<div class="part">
+							<select name="genres">
+								<option disabled selected>Жанры</option>
+							</select>
+							<input type="button" value="Добавить">
+						</div>
+						<div class="genres">
+							Добавьте жанр
+						</div>
+					</fieldset>
+					<!-- Lists -->
+					<fieldset>
+						<legend>Списки</legend>
+						<select name="type">
+							<option selected disabled>Тип</option>
+							<option value="Новелла с выборами">Новелла с выборами</option>
+							<option value="Кинетическая новелла">Кинетическая новелла</option>
+						</select>
+						<select name="duration">
+							<option selected disabled>Продолжительность</option>
+							<option value="Менее 2 часов">Менее 2 часов</option>
+							<option value="2-10 часов">2-10 часов</option>
+							<option value="10-30 часов">10-30 часов</option>
+							<option value="30-50 часов">30-50 часов</option>
+							<option value="Более 50 часов">Более 50 часов</option>
+						</select>
+						<select name="platform">
+							<option selected disabled>Платформа</option>
+							<option value="Windows">Windows</option>
+							<option value="Linux">Linux</option>
+							<option value="Mac">Mac</option>
+							<option value="Android">Android</option>
+							<option value="iOS">iOS</option>
+							<option value="Другое">Другое</option>
+						</select>
+						<select name="age_rating">
+							<option selected disabled>Возрастной рейтинг</option>
+							<option value="G">G</option>
+							<option value="PG">PG</option>
+							<option value="PG-13">PG-13</option>
+							<option value="R">R</option>
+							<option value="NC-17">NC-17</option>
+						</select>
+						<select name="country">
+							<option selected disabled>Страна</option>
+							<option value="Россия">Россия</option>
+							<option value="Япония">Япония</option>
+							<option value="США">США</option>
+						</select>
+						<select name="language">
+							<option selected disabled>Язык</option>
+							<option value="Русский">Русский</option>
+							<option value="Японский">Японский</option>
+							<option value="Английский">Английский</option>
+						</select>
+					</fieldset>
+					<input type="submit" value="Отправить на модерацию">
+				</form>
+			</div>
+		`;
+		$(".left .wrap .tab_content").html(out);
+	}
+	function load_right() {
+		out = `<h2>Предпросмотр</h2><div id="preview"></div>`;
+		$(".right .wrap .tab_content").html(out);
+	}
+</script>
+

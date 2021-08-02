@@ -56,6 +56,7 @@ let auth = {
 		request.post(data => {
 			data = JSON.parse(data);
 			if (data.data != true) {
+				route.attach_module("client/pages/modules/menu.html", "menu");
 				message.show("Вы не авторизованы");
 				return route.redirect("auth/login");
 			} else  {

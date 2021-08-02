@@ -322,6 +322,10 @@ div.moderation div#user_inform div.head h4 {
 	width: 20%;
 }
 
+div.moderation div.right h2 {
+	text-align: right;
+}
+
 div.moderation nav.actions {
 	display: flex;
 	text-align: right;
@@ -332,6 +336,20 @@ div.moderation nav.actions {
 div.moderation nav.actions div{
 	margin: 10px 0;
 	font-size: 16pt;
+}
+
+div.moderation nav.actions div.active a{
+	color: white;
+	padding: 10px;
+	border-radius: 25px;
+	background-color: #3399FF;
+}
+
+div.moderation nav.actions div a:hover{
+	color: white;
+	padding: 10px;
+	border-radius: 25px;
+	background-color: #3399FF;
 }
 /*==============================================*/
 

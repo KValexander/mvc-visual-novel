@@ -63,7 +63,7 @@ let route = {
 
 		if (this.xhr.status == 200) {
 			if (this.xhr.responseText.includes("<!DOCTYPE html>"))
-				return $("#" + element_id).html(`<h1>Ошибка 404</h1> <h3>Такого файла нет</h3>`);
+				return $("#" + elem_id).html(`<h1>Ошибка 404</h1> <h3>Такого файла нет</h3>`);
 			$("#" + elem_id).html(this.xhr.responseText);
 		}
 		else console.log(this.xhr);

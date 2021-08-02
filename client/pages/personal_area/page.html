@@ -1,0 +1,66 @@
+<script>
+	// Calling functions
+	load_left();
+	load_right();
+	load_data();
+
+	// Receiving and loading user data
+	function load_data() {
+		// Retrieving Authorized User Data
+		request.get((data) => {
+			// Data parsing
+			data = JSON.parse(data);
+			out = "";
+			if (data.data.image != null) out += `<div class="image"><img src="server/${data.data.image}" /></div>`;
+			out += `
+				<div class="inform">
+					<h2>${data.data.username}</h2>
+					<p><b>Роль:</b> ${data.data.role}</p>
+				</div>
+			`;
+			$("#personal_inform").html(out);
+		}, null, "api/user");
+	}
+
+	// Update a profile picture
+	function update_picture() {
+		let formData = new FormData($("form#update_picture")[0]);
+		request.post((data) => {
+			data = JSON.parse(data);
+			if(data.status == 200) {
+				load_data();
+				message.show(data.data.message);
+			}
+			else if(data.status == 422) {
+				message.show(data.data.errors.picture);
+			}
+			$("input[name=picture]").val("");
+		}, formData, "api/user/update/avatar", true);
+	}
+
+	// Default function of loading the left content part
+	function load_left() {
+		out = `
+			<h2>Информация о пользователе</h2><br>
+			<div id="personal_inform"></div>
+		`;
+		$(".left .wrap .tab_content").html(out);
+	}
+	
+	// Default function of loading the left right part
+	function load_right() {
+		out = `
+			<nav class="actions">
+				<h2>Действия</h2>
+				<hr><br>
+				<h4>Загрузить изображение профиля</h4>
+				<form id="update_picture">
+					<input type="file" name="picture">
+					<p class="notice">Изображение должно весить не более 1мб</p>
+					<a onclick="update_picture()" class="underline">Загрузить</a>
+				</form>
+			</nav>
+		`;
+		$(".right .wrap .tab_content").html(out);
+	}
+</script>

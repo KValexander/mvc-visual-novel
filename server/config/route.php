@@ -8,7 +8,7 @@ class Route {
 	// Adding middleware
 	public static function middleware($filename, $callback) {
 		self::$groups[$filename] = array();
-		$routes = $callback();
+		var_dump($callback);
 		// var_dump(self::$routes);
 		// var_dump(is_callable(self::$routes["GET"]["/api/test/"]));
 	}
