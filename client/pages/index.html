@@ -1,10 +1,17 @@
 <script>
-	request.get(data => {
-		console.log("With middleware: " + data);
-	}, null, "api/test");
-	request.get(data => {
-		console.log("Withuout middleware: " + data);
-	}, null, "api/test2");
+	// Test ladder
+	// request.get(data => {
+	// 	console.log("With middleware: " + data);
+	// 	request.get(data => {
+	// 		console.log("Without middleware: " + data);
+	// 		request.get(data => {
+	// 			console.log("With middleware: " + data);
+	// 			request.get(data => {
+	// 				console.log("With middleware: " + data);
+	// 			}, null, "api/test4");
+	// 		}, null, "api/test3");
+	// 	}, null, "api/test2");
+	// }, null, "api/test");
 </script>
 
 <div class="content">

@@ -113,12 +113,14 @@ select {
 	font-size: 14pt;
 	padding-left: 5px;
 	transition: .2s;
+	border-radius: 3px;
 	/*box-shadow: 0 0 3px rgba(0,0,0,0.5);*/
 }
 
 form input[type=file] {
 	border: none;
 	height: 35px;
+	border-radius: 0px;
 	border-bottom: solid 2px black;
 }
 
@@ -130,7 +132,8 @@ form div.part input,
 form div.part select {
 	width: 69%;
 }
-form div.part input[type=button] {
+form div.part input[type=button],
+form div.part input[type=submit] {
 	margin-left: 1%;
 	width: 30%;
 }
@@ -175,6 +178,7 @@ form textarea {
 	font-size: 14pt;
 	transition: .2s;
 	min-height: 100px;
+	border-radius: 3px;
 	border: solid 1px black;
 	font-family: Arial;
 }

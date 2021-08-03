@@ -53,7 +53,7 @@ function validator($data, $arr) {
 						if ($check === true) {
 							$size = filesize($data[$key]["tmp_name"]) / 1024;
 							if ($size > (int)$max[1])
-								$errors->errors[$key] = "Файл не должен превышать ". $max[1] ." килобайт";
+								$errors->errors[$key] = "Файл не должен превышать ". $max[1] / 1024 ." мб";
 						}
 					// Checking text data
 					} else
@@ -89,7 +89,7 @@ function validator($data, $arr) {
 					if ($check === true) {
 						$mimes = explode(",", explode(":", $val)[1]);
 						$extension = explode(".", $data[$key]["name"])[1];
-						if(array_search($extension, $mimes) === false)
+						if(in_array($extension, $mimes) === false)
 							$errors->errors[$key] = "Расширение изображения не подходит";
 					} else $errors->errors[$key] = $check;
 					break;

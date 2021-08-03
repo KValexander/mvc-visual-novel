@@ -1,8 +1,5 @@
 <?php
-// Including files
-include "config/validator.php";
-include "config/auth.php";
-
+// Controller with authorization methods
 class AuthController {
 
 	// New User Registration

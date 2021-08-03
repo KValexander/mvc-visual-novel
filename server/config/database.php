@@ -1,7 +1,4 @@
 <?php
-// Including files
-include "config/rand.php";
-
 class DB {
 	// Data for connecting to the base
 	private static $dbhost = "localhost";
@@ -54,13 +51,15 @@ class DB {
 
 	// Additional condition
 	public static function andWhere($field, $condition, $value) {
-		self::$where .= sprintf(" AND `%s`%s'%s'", $field, $condition, $value);
+		if (self::$where_state)
+			self::$where .= sprintf(" AND `%s`%s'%s'", $field, $condition, $value);
 		return new self;
 	}
 
 	// Additional condition
 	public static function orWhere($filed, $condition, $value) {
-		self::$where .= sprintf(" OR `%s`%s'%s'", $field, $condition, $value);
+		if (self::$where_state)
+			self::$where .= sprintf(" OR `%s`%s'%s'", $field, $condition, $value);
 		return new self;
 	}
 

@@ -1,2 +1,41 @@
+<script>
+	// Retrieving data from all directories
+	request.get(data => {
+		data = JSON.parse(data);
+		if (data.data.genres.length == 0) out = ``;
+		else null;
+		$("select[name=genre]").append(out);
+	}, null, "api/get/directories");
+
+	// Adding a genre
+	function add_genre() {
+		let form = $("#add_genre").serialize();
+		request.get(data => {
+			console.log(data);
+		}, null, "api/add/genre?"+form);
+		return false;
+	}
+
+	// Delete genre
+	function delete_genre() {
+		let form = $("#delete_genre").serialize();
+		return false;
+	}
+</script>
+
 <h2>Добавление справочников</h2>
+<form id="add_genre" onsubmit="return add_genre()">
+	<div class="part">
+		<input type="text" placeholder="Добавить жанр" name="genre">
+		<input type="submit" value="Добавить">
+	</div>
+</form>
 <h2>Удаление справочников</h2>
+<form id="delete_genre" onsubmit="return delete_genre()">
+	<div class="part">
+		<select name="genre">
+			<option selected disabled>Жанры</option>
+		<input type="submit" value="Удалить">
+		</select>
+	</div>
+</form>

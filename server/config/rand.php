@@ -8,7 +8,6 @@ class Rand {
 	        $random_character = self::$permitted_chars[mt_rand(0, $input_length - 1)];
 	        $random_string .= $random_character;
 	    }
-	 
 	    return $random_string;
 	}
 }
