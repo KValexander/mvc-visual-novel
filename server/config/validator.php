@@ -18,16 +18,14 @@ function validator($data, $arr) {
 			switch ($val) {
 				// Required
 				case "required":
-					if ($data[$key] === "")
+					if ($data[$key] === "" || $data[$key] == NULL)
 						$errors->errors[$key] = "Поле не должно быть пустым";
 					break;
-
+					
 				// String
 				case "string":
-					if (!is_string($data[$key])) {
-						var_dump("Какого хера?", $data[$key], $key, $data);
+					if (!is_string($data[$key]))
 						$errors->errors[$key] = "Поле должно являться строкой";
-					}
 					break;
 
 				// Email
@@ -35,6 +33,12 @@ function validator($data, $arr) {
 					if (strlen($data[$key]) != 0) 
 						if (!preg_match("/@/", $data[$key]))
 							$errors->errors[$key] = "Поле должно содержать символ @";
+					break;
+
+				// Year
+				case "year":
+					if (strlen($data[$key]) != 4)
+							$errors->errors[$key] = "Поле должно содержать 4 числа";
 					break;
 
 				// Min

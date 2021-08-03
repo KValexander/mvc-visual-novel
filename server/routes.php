@@ -37,6 +37,9 @@
 		Route::get("/api/get/directories", "ModerationController/get_directories");
 		// Logout
 		Route::get("/api/logout", "AuthController/logout");
+
+		// Add novel
+		Route::post("/api/add/novel", "NovelController/add_novel");
 	});
 
 	// Routes for administration only

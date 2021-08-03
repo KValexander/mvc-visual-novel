@@ -11,7 +11,8 @@ body {
 	background-color: #f3f3f3;
 }
 
-input.err::-webkit-input-placeholder {
+input.err::-webkit-input-placeholder,
+textarea.err::-webkit-input-placeholder {
 	color: rgba(255,0,0,0.8);
 }
 input.acc::-webkit-input-placeholder {
@@ -138,11 +139,15 @@ form div.part input[type=submit] {
 	width: 30%;
 }
 
-form input.err {
+form input.err,
+form select.err,
+form textarea.err {
 	border: solid 1px red;
 	box-shadow: 0 0 3px rgba(128, 0, 0, 0.5);
 }
-form input.acc {
+form input.acc,
+form select.acc
+form textarea.acc {
 	border: solid 1px green;
 	box-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
 }
@@ -175,6 +180,7 @@ form textarea {
 	width: 100%;
 	padding: 5px;
 	outline: none;
+	margin: 10px 0;
 	font-size: 14pt;
 	transition: .2s;
 	min-height: 100px;
@@ -294,20 +300,24 @@ div.profile div#personal_inform div.inform p{
 	padding: 5px 0;
 }
 
-div.profile div.add_novel div.genres {
+div.profile div.add_novel div.genres,
+div.profile div.add_novel div.screenshots {
 	display: flex;
 	flex-wrap: wrap;
 }
-div.profile div.add_novel div.genres div.genre {
+div.profile div.add_novel div.genres div.genre,
+div.profile div.add_novel div.screenshots div.screenshot {
 	padding: 10px;
-	margin: 5px;
-	border-radius: 20px;
+	border-radius: 25px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 	color: white;
 	background-color: #3399FF;
 	cursor: pointer;
 	transition: .2s;
 }
-div.profile div.add_novel div.genres div.genre:hover {
+div.profile div.add_novel div.genres div.genre:hover,
+div.profile div.add_novel div.screenshots div.screenshot:hover {
 	background-color: #FF6600;
 }
 /*==============================================*/
