@@ -85,7 +85,11 @@ let auth = {
 	// Handling errors
 	errors: function(data) {
 		// Handling an authorization error
-		if(data.status == 401) $("#login").html(data.data.message).addClass("error_acc");
+		if(data.status == 401) { 
+			$("#login").html(data.data.message).addClass("error_acc");
+			$(`input[name=login]`).addClass("err");
+			$(`input[name=password]`).addClass("err");
+		}
 		// Handling Validation Errors
 		else if(data.status == 422) {
 			for(key in data.data.errors) {

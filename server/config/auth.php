@@ -43,7 +43,7 @@ class Auth {
 
 	// Retrieving Authorized User Data
 	public static function user() {
-		if (isset($_SESSION["id"])) {
+		if (self::check()) {
 			self::$user = DB::table(self::$table)->where(self::$primary_key, "=", $_SESSION["id"])->first();
 			// In any case, self::$user will contain either data or NULL
 			return self::$user;

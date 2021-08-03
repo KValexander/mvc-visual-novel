@@ -24,6 +24,8 @@
 	Route::post("/api/register", "AuthController/register");
 	// Login
 	Route::post("/api/login", "AuthController/login");
+	// Role
+	Route::get("/api/role", "UserController/get_role");
 
 	// Routes for authorized users only
 	Route::middleware("AuthMiddleware", function() {
@@ -31,6 +33,8 @@
 		Route::get("/api/user", "UserController/get_user");
 		// Update avatar
 		Route::post("/api/user/update/avatar", "UserController/update_avatar");
+		// Get directories
+		Route::get("/api/get/directories", "ModerationController/get_directories");
 		// Logout
 		Route::get("/api/logout", "AuthController/logout");
 	});
@@ -39,14 +43,11 @@
 	Route::middleware("ModerationMiddleware", function() {
 		// Get all user
 		Route::get("/api/get/users", "ModerationController/get_users");
-		// Get directories
-		Route::get("/api/get/directories", "ModerationController/get_directories");
 		// Add genre
 		Route::get("/api/add/genre", "ModerationController/add_genre");
+		// Delete genre
+		Route::get("/api/delete/genre", "ModerationController/delete_genre");
 	});
-
-	// Role
-	Route::get("/api/role", "UserController/get_role");
 	// Auth check
 	Route::post("/api/auth/check", "AuthController/auth_check");
 ?>

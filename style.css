@@ -293,6 +293,23 @@ div.profile div#personal_inform div.image img {
 div.profile div#personal_inform div.inform p{
 	padding: 5px 0;
 }
+
+div.profile div.add_novel div.genres {
+	display: flex;
+	flex-wrap: wrap;
+}
+div.profile div.add_novel div.genres div.genre {
+	padding: 10px;
+	margin: 5px;
+	border-radius: 20px;
+	color: white;
+	background-color: #3399FF;
+	cursor: pointer;
+	transition: .2s;
+}
+div.profile div.add_novel div.genres div.genre:hover {
+	background-color: #FF6600;
+}
 /*==============================================*/
 
 /*Moderation*/

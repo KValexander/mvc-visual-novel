@@ -1,6 +1,11 @@
 <script>
+	let genres = [];
+	// Calling functions
 	load_left();
 	load_right();
+	load_data();
+
+	// Loading layout
 	function load_left() {
 		out = `
 			<h2>Добавление новеллы</h2>
@@ -42,14 +47,10 @@
 					<fieldset>
 						<legend>Жанры</legend>
 						<div class="part">
-							<select name="genres">
-								<option disabled selected>Жанры</option>
-							</select>
-							<input type="button" value="Добавить">
+							<select name="genres"></select>
+							<input type="button" value="Добавить" onclick="add_genre()">
 						</div>
-						<div class="genres">
-							Добавьте жанр
-						</div>
+						<div class="genres"></div>
 					</fieldset>
 					<!-- Lists -->
 					<fieldset>
@@ -103,9 +104,44 @@
 		`;
 		$(".left .wrap .tab_content").html(out);
 	}
+	// Loading layout
 	function load_right() {
 		out = `<h2>Предпросмотр</h2><div id="preview"></div>`;
 		$(".right .wrap .tab_content").html(out);
+	}
+	// Loading data
+	function load_data() {
+		request.get(data => {
+			data = JSON.parse(data);
+			out = `<option selected disabled>Жанры</option>`;
+			if (data.data.genres.length != 0)
+				data.data.genres.forEach(genre => out += `<option value="${genre.genre_id}">${genre.genre}</option>`);
+			$("select[name=genres]").html(out);
+		}, null, "api/get/directories");
+
+	}
+
+	// Adding genres to an array
+	function add_genre() {
+		let id = $("select[name=genres]").val();
+		if (id == null) return;
+		let text = $("select[name=genres]").find("option:selected").text();
+
+		let check = genres.find(genre => genre == id);
+		if (check != undefined) return;
+
+		genres.push(id);
+		out = `<div class="genre" onclick="remove_genre(event)">${text}</div>`;
+
+		$(".genres").append(out);
+	}
+	
+	// Remove genre
+	function remove_genre(e) {
+		let dId = $(`select[name=genres] option:contains("${e.target.innerHTML}")`).val();
+		let cIc = genres.findIndex(id => id == dId);
+		genres.splice(cIc, 1);
+		e.target.remove();
 	}
 </script>
 
