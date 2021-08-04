@@ -37,7 +37,7 @@ function validator($data, $arr) {
 
 				// Year
 				case "year":
-					if (strlen($data[$key]) != 4)
+					if (strlen($data[$key]) != 4 || !is_numeric($data[$key]))
 							$errors->errors[$key] = "Поле должно содержать 4 числа";
 					break;
 

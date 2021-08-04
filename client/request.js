@@ -12,9 +12,7 @@ let request = {
 		// Asynchronous data loading
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState != 4) return;
-			if (xhr.status >= 200 && xhr.status < 300)
-				callback(xhr.responseText);
-			else callback(xhr.responseText);
+			callback(xhr.responseText);
 		}
 		// Headers
 		this.headers(xhr);
@@ -28,9 +26,7 @@ let request = {
 		// Asynchronous data loading
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState != 4) return;
-			if (xhr.status >= 200 && xhr.status < 300)
-				callback(xhr.responseText);
-			else callback(xhr.responseText);
+			callback(xhr.responseText);
 		}
 		// Headers
 		this.headers(xhr);

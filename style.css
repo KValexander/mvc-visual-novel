@@ -1,3 +1,8 @@
+@font-face {
+	font-family: Custom;
+	src: url("fonts/GardensCMRegular.ttf");
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -7,8 +12,9 @@
 body {
 	min-width: 600px;
 	font-size: 14pt;
-	font-family: Arial;
+	/*font-family: Arial;*/
 	background-color: #f3f3f3;
+	font-family: Custom;
 }
 
 input.err::-webkit-input-placeholder,
@@ -35,6 +41,7 @@ a:hover {
 }
 
 hr {
+	margin: 5px 0;
 	border: solid 2px #3399FF;
 }
 
@@ -110,7 +117,8 @@ select {
 	margin: 10px 0;
 	border: solid 1px black;
 	height: 40px;
-	font-family: Arial;
+	/*font-family: Arial;*/
+	font-family: Custom;
 	font-size: 14pt;
 	padding-left: 5px;
 	transition: .2s;
@@ -186,7 +194,8 @@ form textarea {
 	min-height: 100px;
 	border-radius: 3px;
 	border: solid 1px black;
-	font-family: Arial;
+	/*font-family: Arial;*/
+	font-family: Custom;
 }
 /*==============================================*/
 
@@ -254,6 +263,13 @@ div.content div.left {
 	background-color: rgba(255,255,255, 0.9);
 }
 
+/*div.profile div.tab_content {
+	padding: 20px;
+	border-radius: 5px;
+	border: solid 1px rgba(0,0,0,0.3);
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}*/
+
 div.content div.right {
 	margin-left: 2%;
 	width: 30%;
@@ -301,12 +317,14 @@ div.profile div#personal_inform div.inform p{
 }
 
 div.profile div.add_novel div.genres,
-div.profile div.add_novel div.screenshots {
+div.profile div.add_novel div.screenshots,
+div.profile div.add_novel div.platforms {
 	display: flex;
 	flex-wrap: wrap;
 }
 div.profile div.add_novel div.genres div.genre,
-div.profile div.add_novel div.screenshots div.screenshot {
+div.profile div.add_novel div.screenshots div.screenshot,
+div.profile div.add_novel div.platforms div.platform {
 	padding: 10px;
 	border-radius: 25px;
 	margin-right: 5px;
@@ -317,8 +335,51 @@ div.profile div.add_novel div.screenshots div.screenshot {
 	transition: .2s;
 }
 div.profile div.add_novel div.genres div.genre:hover,
-div.profile div.add_novel div.screenshots div.screenshot:hover {
+div.profile div.add_novel div.screenshots div.screenshot:hover,
+div.profile div.add_novel div.platforms div.platform:hover {
 	background-color: #FF6600;
+}
+
+div#wrap_novel {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+div#wrap_novel div.novel {
+	padding: 20px;
+	border-radius: 5px;
+	border: solid 1px rgba(0,0,0,0.3);
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	margin: 10px 0;
+	display: flex;
+}
+
+div#wrap_novel div.novel div.cover {
+	width: 30%;
+	height: 320px;
+	margin-right: 3%;
+	overflow: hidden;
+	border-radius: 5px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+div#wrap_novel div.novel div.cover img {
+	object-fit: cover;
+	height: 100%;
+}
+
+div#wrap_novel div.novel div.inform {
+	width: 67%;
+}
+
+div#wrap_novel div.novel div.inform h3 {
+	margin-bottom: 10px;
+}
+
+div#wrap_novel div.novel div.inform p {
+	padding: 5px 0;
 }
 /*==============================================*/
 
@@ -382,6 +443,7 @@ div.moderation nav.actions div a:hover{
 	border-radius: 25px;
 	background-color: #3399FF;
 }
+
 /*==============================================*/
 
 #message {

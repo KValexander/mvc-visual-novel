@@ -7,9 +7,27 @@ class ModerationController {
 		return response(200, $users);
 	}
 
+	// Get all novels for moderations
+	public function get_moderation_novels() {
+		$novels = DB::table("novels")->where("state", "=", "0")->get();
+		// Getting genres and images
+		foreach($novels as $key => $novel) {
+			// Getting cover
+			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$novels[$key]["cover"] = $cover;
+			// Getting genres
+			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			foreach($genres as $genre_id) {
+				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$novels[$key]["genres"] .= $genre ." ";
+			}
+		}
+		return response(200, ["novels" => $novels]);
+	}
+
 	// Get directory
 	public function get_directories() {
-		$genres = DB::table("genres")->orderBy("genre", "ASC")->get();
+		$genres = DB::table("genres")->get();
 		$data = ["genres" => $genres];
 		return response(200, $data);
 	}

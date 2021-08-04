@@ -42,7 +42,11 @@ class UserController {
 		$user = Auth::user();
 
 		// Retrieving a record to delete a past photo
-		$image = DB::table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first();
+		$image = DB::table("images")
+			->where("foreign_id", "=", $user["user_id"])
+			->andWhere("affiliation", "=", "users")
+			->select("path_to_image")
+			->first();
 		if($image["path_to_image"] != NULL) unlink($image["path_to_image"]);
 
 		// Retrieving image data
@@ -68,6 +72,29 @@ class UserController {
 
 		// In case of success of inserting and changing data
 		return response(200, ["message" => "Данные успешно обновлены"]);
+	}
+
+	// Receiving short stories on moderation of certain users
+	public function get_moderation_novels() {
+		$user = Auth::user();
+		// Getting novels
+		$novels = DB::table("novels")
+			->where("user_id", "=", $user["user_id"])
+			->andWhere("state", "=", 0)
+			->get();
+		// Getting genres and images
+		foreach($novels as $key => $novel) {
+			// Getting cover
+			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$novels[$key]["cover"] = $cover;
+			// Getting genres
+			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			foreach($genres as $genre_id) {
+				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$novels[$key]["genres"] .= $genre ." ";
+			}
+		}
+		return response(200, ["novels" => $novels]);
 	}
 }
 ?>

@@ -35,7 +35,7 @@ class DB {
 	// Fluid interface
 	// Table
 	public static function table($table) {
-		self::$table = $table;
+		self::$table = sprintf("`%s`", $table);
 		self::$table_state = true;
 		self::$where_state = false;
 		self::$select_state = false;
@@ -45,21 +45,21 @@ class DB {
 	// Selecting a table by attribute
 	public static function where($field, $condition, $value) {
 		self::$where_state = true;
-		self::$where = sprintf("WHERE `%s`%s'%s'", $field, $condition, $value);
+		self::$where = sprintf("WHERE `%s` %s '%s'", $field, $condition, $value);
 		return new self;
 	}
 
 	// Additional condition
 	public static function andWhere($field, $condition, $value) {
 		if (self::$where_state)
-			self::$where .= sprintf(" AND `%s`%s'%s'", $field, $condition, $value);
+			self::$where .= sprintf(" AND `%s` %s '%s'", $field, $condition, $value);
 		return new self;
 	}
 
 	// Additional condition
 	public static function orWhere($filed, $condition, $value) {
 		if (self::$where_state)
-			self::$where .= sprintf(" OR `%s`%s'%s'", $field, $condition, $value);
+			self::$where .= sprintf(" OR `%s` %s '%s'", $field, $condition, $value);
 		return new self;
 	}
 
