@@ -13,6 +13,10 @@
 	// Route::type("/api/route", "Controller/method")->middleware(function(){});
 	// Route::type("/api/route", "Controller/method")->middleware("Middleware");
 
+	// Route::type("/api/route/{id}", function() {
+	// 	echo Request::route("id");
+	// });
+
 	/*
 	Route::middleware("middleware", function() {
 		Route::type("/api/route", function(){});
