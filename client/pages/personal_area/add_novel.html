@@ -132,7 +132,7 @@
 			if (data.data.genres.length != 0)
 				data.data.genres.forEach(genre => out += `<option value="${genre.genre_id}">${genre.genre}</option>`);
 			$("select[name=genres]").html(out);
-		}, null, "api/get/directories");
+		}, null, "api/directory/get");
 	}
 
 	// Adding genres to an array

@@ -9,7 +9,7 @@
 			if (data.data.genres.length != 0)
 				data.data.genres.forEach(genre => out += `<option value="${genre.genre_id}">${genre.genre}</option>`);
 			$("select[name=genre_id]").html(out);
-		}, null, "api/get/directories");
+		}, null, "api/directory/get");
 	}
 
 	// Adding a genre
@@ -25,7 +25,7 @@
 				message.show(data.data.message);
 				$("#add_genre input[name=genre]").val("").removeClass("err");
 			}
-		}, null, "api/add/genre?"+form);
+		}, null, "api/directory/genre/add?"+form);
 		return false;
 	}
 
@@ -36,10 +36,11 @@
 			out_directories();
 			data = JSON.parse(data);
 			message.show(data.data.message);
-		}, null, "api/delete/genre?"+form);
+		}, null, "api/directory/genre/delete?"+form);
 		return false;
 	}
 </script>
+
 <div class="directories">
 	<h2>Добавление справочников</h2>
 	<!-- Add genre -->

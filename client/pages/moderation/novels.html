@@ -5,6 +5,7 @@
 		if (data.data.novels.length == 0)
 			out = `<h3>На данный момент информация отсутствует</h3>`;
 		else {
+			// Collect data
 			data.data.novels.forEach(novel => {
 				status = (novel.state == 0) ? `<font color="red">На модерации</font>` : `<font color="green">Одобрена</font>`;
 				out += `
@@ -29,14 +30,15 @@
 				`;
 			});
 		}
+		// Out data
 		$("#wrap_novels").html(out);
-	}, null, "api/get/moderation_novels");
+	}, null, "api/moderation/novels/get");
 
 	// Approve the novel
 	function approve(id) {
 		request.get(data => {
 			console.log(data);
-		}, null, "api/novel/"+id+"/approve");
+		}, null, "api/moderation/novel/"+id+"/approve");
 	}
 </script>
 

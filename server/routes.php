@@ -36,14 +36,14 @@
 	// Get novel
 	Route::get("/api/novel/{id}", "NovelController/get_novel");
 
+	// Get directories
+	Route::get("/api/directory/get", "DirectoryController/get_directories");
+
 	// Routes for authorized users only
 	Route::middleware("AuthMiddleware", function() {
 
 		// Add novel
 		Route::post("/api/add/novel", "NovelController/add_novel");
-
-		// Get directories
-		Route::get("/api/get/directories", "ModerationController/get_directories");
 
 		// User
 		Route::get("/api/user", "UserController/get_user");
@@ -54,6 +54,11 @@
 		// Get novels for moderation
 		Route::get("/api/user/moderation_novels", "UserController/get_moderation_novels");
 
+		// Add comment
+		Route::post("/api/novel/{id}/comment/add", "CommentController/add_comment");
+		// Delete comment
+		Route::get("/api/novel/{id}/comment/delete", "CommentController/delete_comment");
+
 		// Logout
 		Route::get("/api/auth/logout", "AuthController/logout");
 
@@ -63,19 +68,19 @@
 	Route::middleware("ModerationMiddleware", function() {
 
 		// Get all users
-		Route::get("/api/get/users", "ModerationController/get_users");
+		Route::get("/api/moderation/users/get", "ModerationController/get_users");
 
 		// Get all novels for moderation
-		Route::get("/api/get/moderation_novels", "ModerationController/get_moderation_novels");
+		Route::get("/api/moderation/novels/get", "ModerationController/get_moderation_novels");
 
 		// Approve novel
-		Route::get("/api/novel/{id}/approve", "ModerationController/novel_approve");
+		Route::get("/api/moderation/novel/{id}/approve", "ModerationController/novel_approve");
 
 		// Add genre
-		Route::get("/api/add/genre", "ModerationController/add_genre");
+		Route::get("/api/directory/genre/add", "ModerationController/add_genre");
 
 		// Delete genre
-		Route::get("/api/delete/genre", "ModerationController/delete_genre");
+		Route::get("/api/directory/genre/delete", "ModerationController/delete_genre");
 
 	});
 

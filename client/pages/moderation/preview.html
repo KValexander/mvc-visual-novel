@@ -1,4 +1,5 @@
 <script>
+	timer = "";
 	// Check for authorization with access rights
 	auth.check(() => {
 		// Retrieving novel data
@@ -8,7 +9,6 @@
 				message.show("Новелла не найдена");
 				return route.redirect('index');
 			}
-			console.log(data);
 			out_data(data.data);
 		}, null, "api/novel/"+route.url_id);
 	}, true);
@@ -20,16 +20,19 @@
 		out = `
 			<div class="left">
 				<h2>${title}</h2><br>
-				<h3>Скриншоты</h3>
-				<div class="slider"></div><br>
+				<div class="slider">
+					<div class="slides"></div>
+					<div class="images"></div>
+				</div><br>
 				<h3>Описание</h3>
 				<p>${data.description}</p><br>
-				<h3>Комментарии</h3>
+				<h3>Комментарии (${data.comments.length}):</h3>
+				<div class="comments"></div>
 			</div>
 			<div class="right">
 				<div class="cover">
 					<img src="server/${data.cover.path_to_image}" />
-				</div><br>
+				</div><hr>
 				<div class="inform">
 					<p><b>Год релиза:</b> ${data.year_release}</p>
 					<p><b>Тип:</b> ${data.type}</p>
@@ -39,10 +42,75 @@
 					<p><b>Разработчик:</b> ${data.developer}</p>
 					<p><b>Страна:</b> ${data.country}</p>
 					<p><b>Язык:</b> ${data.language}</p>
-				</div>
+				</div><hr>
 			</div>
 		`;
 		$(".wrap_novel").html(out);
+		out_screenshots(data.screenshots);
+		out_comments(data.comments);
+	}
+
+	// Screenshots output
+	function out_screenshots(data) {
+		out = ``;
+		data.forEach((screenshot, i) => out += `<img class="slide_${i}" src="server/${screenshot.path_to_image}" />`);
+		$(".slides").html(out);
+		out += `<div class="outline"></div>`
+		$(".images").html(out);
+		slider();
+		slider_events();
+	}
+
+	// Slider
+	function slider(slide=0) {
+		clearTimeout(timer);
+		let length = $(".slides img").length;
+		if (slide >= length) slide = 0;
+		$(".slides img").css("display", "none").eq(slide).css("display", "block");
+		// console.log($(".slides img.slide_"+slide).position().left);
+		// $(".slides img.slide_"+slide).position().left
+		// $(".slides img.slide_"+slide).animate({left: `${$(".slides img.slide_"+slide).position().left}`}, 300);
+		$(".images .outline").animate({left: `${$(".images img.slide_"+slide).position().left - 2}`}, 300);
+		slide++; timer = setTimeout(() => { slider(slide); }, 5000);
+	}
+
+	// Slider events
+	function slider_events() {
+		$(".images img").click(function() {
+			slider($(this).index());
+		});
+	}
+
+	// Comments output
+	function out_comments(data) {
+		if (auth.role != "guest") {
+			out = `
+				<form onsubmit="return add_comment()">
+					<div class="part">
+						<textarea placeholder="Ваш комментарий" name="comment"></textarea>
+						<div class="buttons">
+							<input type="submit" value="Добавить">
+							<input type="reset" value="Очистить">
+						</div>
+					</div>
+				</form><hr>
+			`;
+		} else out = `<p>Войдите чтобы оставить комментарий</p>`;
+		if(data.length == 0) {
+			out += `<h3>Комментарии отсутствуют</h3>`;
+		} else {
+			out += ``;
+		}
+		$(".comments").html(out);
+	}
+
+	// Add comment
+	function add_comment() {
+		let form = $("form").serialize();
+		request.post(data => {
+			console.log(data);
+		}, form, `api/novel/${route.url_id}/comment/add`);
+		return false;
 	}
 </script>
 
