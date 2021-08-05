@@ -35,7 +35,7 @@ class DB {
 	// Fluid interface
 	// Table
 	public static function table($table) {
-		self::$table = sprintf("`%s`", $table);
+		self::$table = $table;
 		self::$table_state = true;
 		self::$where_state = false;
 		self::$select_state = false;
@@ -92,7 +92,7 @@ class DB {
 		$where = (self::$where_state) ? self::$where : "";
 		$select = (self::$select_state) ? self::$select : "*";
 		$orderby = (self::$orderby_state) ? self::$orderby : "";
-		$query = sprintf("SELECT %s FROM %s %s %s", $select, $table, $where, $orderby);
+		$query = sprintf("SELECT %s FROM `%s` %s %s", $select, $table, $where, $orderby);
 		$result = self::query($query);
 		$array = [];
 		while($row = $result->fetch_assoc())
@@ -106,7 +106,7 @@ class DB {
 		$where = (self::$where_state) ? self::$where : "";
 		$select = (self::$select_state) ? self::$select : "*";
 		$orderby = (self::$orderby_state) ? self::$orderby : "";
-		$query = sprintf("SELECT %s FROM %s %s %s", $select, $table, $where, $orderby);
+		$query = sprintf("SELECT %s FROM `%s` %s %s", $select, $table, $where, $orderby);
 		return self::query($query)->fetch_assoc();
 	}
 

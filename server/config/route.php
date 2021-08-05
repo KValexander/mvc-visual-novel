@@ -5,7 +5,6 @@ class Route {
 	private static $current_type = NULL;
 	private static $current_route = NULL;
 	private static $current_middleware = NULL;
-	private static $var_in_route = false;
 	private static $routes = array();
 
 	// Adding middleware

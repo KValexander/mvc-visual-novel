@@ -1,4 +1,5 @@
 <script>
+	// Get all novels for moderation
 	request.get(data => {
 		data = JSON.parse(data); out = ``;
 		if (data.data.novels.length == 0)
@@ -13,7 +14,7 @@
 						</div>
 						<div class="inform">
 							<h3>${novel.title}</h3>
-							<p><a class="underline">Предпросмотр</a> | <a class="underline">Одобрить</a></p>
+							<p><a class="underline" onclick="route.redirect('moderation/preview', ${novel.novel_id})">Предпросмотр</a> | <a class="underline" onclick="approve('${novel.novel_id}')">Одобрить</a></p>
 							<p><b>Состояние:</b> ${status}</p>
 							<p><b>Год релиза:</b> ${novel.year_release}</p>
 							<p><b>Тип:</b> ${novel.type}</p>
@@ -28,9 +29,16 @@
 				`;
 			});
 		}
-		$("#wrap_novel").html(out);
+		$("#wrap_novels").html(out);
 	}, null, "api/get/moderation_novels");
+
+	// Approve the novel
+	function approve(id) {
+		request.get(data => {
+			console.log(data);
+		}, null, "api/novel/"+id+"/approve");
+	}
 </script>
 
 <h2>Модерирование новелл</h2><br>
-<div id="wrap_novel"></div>
+<div id="wrap_novels"></div>

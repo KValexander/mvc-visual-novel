@@ -1,17 +1,17 @@
 <script>
 	request.get((data) => {
 		data = JSON.parse(data);
-		role = (data.data == null) ? "guest" : data.data.code;
+		auth.role = (data.data == null) ? "guest" : data.data.code;
 
-		if (role == "guest") { 
+		if (auth.role == "guest") { 
 			out = `
 				<a onclick="route.redirect('auth/register')">Регистрация</a>
 				<a onclick="route.redirect('auth/login')">Авторизация</a>
 			`;
 		}
-		else if (role == "user" || role == "admin" || role == "moderator") {
+		else if (auth.role == "user" || auth.role == "admin" || auth.role == "moderator") {
 			out = ``;
-			if (role == "admin" || role == "moderator") out += `<a onclick="route.redirect('moderation')">Модерация</a>`;
+			if (auth.role == "admin" || auth.role == "moderator") out += `<a onclick="route.redirect('moderation')">Модерация</a>`;
 			out += `
 				<a onclick="route.redirect('profile')">Личный кабинет</a>
 				<a onclick="auth.logout()">Выйти</a>
@@ -19,5 +19,5 @@
 		}
 
 		$("#menu").html(out);
-	}, null, "api/role");
+	}, null, "api/user/role");
 </script>

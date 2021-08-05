@@ -133,5 +133,59 @@ class NovelController {
 		// In case of success
 		return response(200, "Новелла отправлена на модерацию");
 	}
+
+	// Get novel
+	public function get_novel() {
+		// Getting novel_id from route
+		$id = Request::route("id");
+
+		// Getting novel
+		$novel = DB::table("novels")->where("novel_id", "=", $id)->first();
+		if ($novel == null) return response(200, null);
+
+		// Getting genres
+		$genres = DB::table("novels-genres")->where("novel_id", "=", $id)->get();
+		foreach($genres as $genre_id) {
+			$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+			$novel["genres"] .= $genre ." ";
+		}
+
+		// Getting images
+		$cover = DB::table("images")
+			->where("foreign_id", "=", $id)
+			->andWhere("usage", "=", "cover")
+			->andWhere("affiliation", "=", "novels")
+			->first();
+		$novel["cover"] = $cover;
+		$screenshots = DB::table("images")
+			->where("foreign_id", "=", $id)
+			->andWhere("usage", "=", "screenshot")
+			->andWhere("affiliation", "=", "novels")
+			->get();
+		$novel["screenshots"] = $screenshots;
+
+		// Getting user data
+		$user = DB::table("users")->where("user_id", "=", $novel["user_id"])->first();
+		$user["avatar"] = DB::table("images")
+			->where("foreign_id", "=", $user["user_id"])
+			->andWhere("usage", "=", "avatar")
+			->andWhere("affiliation", "=", "users")
+			->first();
+		$novel["user"] = $user;
+
+		// Getting comments
+		$comments = DB::table("comments")->where("novel_id", "=", $novel["user_id"])->get();
+		foreach($comments as $key => $comment) {
+			$comments[$key]["user"] = DB::table("users")->where("user_id", "=", $comment["user_id"])->first();
+			$comments[$key]["user"]["avatar"] = DB::table("images")
+				->where("foreign_id", "=", $comments[$key]["user"]["user_id"])
+				->andWhere("usage", "=", "avatar")
+				->andWhere("affiliation", "=", "users")
+				->first();
+		} $novel["comments"] = $comments;
+
+		// Returning data
+		return response(200, $novel);
+	}
 }
 ?>

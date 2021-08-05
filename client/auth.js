@@ -1,4 +1,6 @@
 let auth = {
+	role: "",
+	
 	// Authorization request
 	authorization: function() {
 		// Serialize
@@ -22,7 +24,7 @@ let auth = {
 				route.attach_module("client/pages/modules/menu.html", "menu");
 			// Handling errors
 			} else this.errors(data);
-		}, form, "api/login");
+		}, form, "api/auth/login");
 
 		// For form submit
 		return false;
@@ -45,7 +47,7 @@ let auth = {
 				route.redirect("index");
 			// Handling errors
 			} else this.errors(data);
-		}, form, "api/register");
+		}, form, "api/auth/register");
 
 		// For form submit
 		return false;
@@ -76,7 +78,7 @@ let auth = {
 							return route.redirect("profile");
 						}
 
-					}, null, "api/role");
+					}, null, "api/user/role");
 				} else callback();
 			};
 		}, null, "api/auth/check");
@@ -107,6 +109,6 @@ let auth = {
 			route.attach_module("client/pages/modules/menu.html", "menu");
 			route.redirect("index");
 			message.show("Вы вышли");
-		}, null, "api/logout");
+		}, null, "api/auth/logout");
 	}
 };

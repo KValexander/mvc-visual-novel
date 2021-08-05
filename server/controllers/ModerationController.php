@@ -25,6 +25,11 @@ class ModerationController {
 		return response(200, ["novels" => $novels]);
 	}
 
+	// Novel approve
+	public function novel_approve() {
+		echo Request::route("id");
+	}
+
 	// Get directory
 	public function get_directories() {
 		$genres = DB::table("genres")->get();

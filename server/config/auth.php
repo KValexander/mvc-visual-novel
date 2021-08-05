@@ -62,6 +62,7 @@ class Auth {
 	public static function check() {
 		$db_token = self::db_token();
 		$auth_token = self::auth_token();
+		if ($db_token == NULL || $auth_token == NULL) return false;
 		if(hash_equals($auth_token, crypt($db_token, $auth_token)))
 			return true;
 		else return false;

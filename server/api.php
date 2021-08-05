@@ -13,7 +13,8 @@
 	DB::connect();
 
 	// Headers
-	header("Access-Control-Allow-Origin: *");
+	// header("Access-Control-Allow-Origin: *"); // Full access
+	header("Access-Control-Allow-Origin: http://spa"); // Access only for a specific domain
 	header("Content-Type:application/json;charset=UTF-8");
 
 	// Checking for Route Availability
@@ -67,6 +68,6 @@
 		$method = (string)$params[1];
 
 		return $controller->$method();
-	} else exit("Route not found");
+	} else return response(404, "Route not found");
 
 ?>

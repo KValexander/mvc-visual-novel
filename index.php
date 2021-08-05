@@ -25,7 +25,7 @@
 	<!-- Header -->
 	<header>
 		<div class="content">
-			<a onclick="route.redirect('index')"><h1>SPA</h1></a>
+			<a onclick="route.redirect('index')"><h1>Novel re</h1></a>
 			<nav id="menu"></nav>
 		</div>
 	</header>

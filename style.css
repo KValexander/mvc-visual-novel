@@ -232,6 +232,7 @@ div.profile {
 	display: flex;
 	flex-wrap: wrap;
 }
+/*Tabs*/
 nav.tabs {
 	display: flex;
 	justify-content: space-between;
@@ -255,6 +256,7 @@ nav.tabs div:hover {
 	color: white;
 }
 
+/*Content*/
 div.content div.left {
 	width: 68%;
 	padding: 20px;
@@ -279,6 +281,7 @@ div.content div.right {
 	background-color: rgba(255,255,255, 0.9);
 }
 
+/*Sidebar*/
 div.profile nav.actions {
 	display: flex;
 	text-align: right;
@@ -297,6 +300,7 @@ div.profile nav.actions p.notice {
 	padding: 0;
 }
 
+/*Personal info*/
 div.profile div#personal_inform {
 	display: flex;
 	flex-wrap: wrap;
@@ -316,6 +320,7 @@ div.profile div#personal_inform div.inform p{
 	padding: 5px 0;
 }
 
+/*Add novel*/
 div.profile div.add_novel div.genres,
 div.profile div.add_novel div.screenshots,
 div.profile div.add_novel div.platforms {
@@ -340,23 +345,28 @@ div.profile div.add_novel div.platforms div.platform:hover {
 	background-color: #FF6600;
 }
 
-div#wrap_novel {
+/*Novels*/
+div#wrap_novels {
 	display: flex;
 	flex-wrap: wrap;
-	flex-direction: column;
 	align-items: stretch;
+	flex-direction: column;
 }
 
-div#wrap_novel div.novel {
+div#wrap_novels div.novel {
+	display: flex;
 	padding: 20px;
+	margin: 10px 0;
 	border-radius: 5px;
 	border: solid 1px rgba(0,0,0,0.3);
 	box-shadow: 0 0 3px rgba(0,0,0,0.5);
-	margin: 10px 0;
-	display: flex;
 }
 
-div#wrap_novel div.novel div.cover {
+div#wrap_novels div.novel:hover {
+	border: solid 1px #3399FF;
+}
+
+div#wrap_novels div.novel div.cover {
 	width: 30%;
 	height: 320px;
 	margin-right: 3%;
@@ -365,22 +375,28 @@ div#wrap_novel div.novel div.cover {
 	box-shadow: 0 0 3px rgba(0,0,0,0.5);
 }
 
-div#wrap_novel div.novel div.cover img {
+div#wrap_novels div.novel div.cover img {
 	object-fit: cover;
 	height: 100%;
 }
 
-div#wrap_novel div.novel div.inform {
-	width: 67%;
-}
+div#wrap_novels div.novel div.inform 	{ width: 67%; }
+div#wrap_novels div.novel div.inform h3 { margin-bottom: 10px; }
+div#wrap_novels div.novel div.inform p 	{ padding: 5px 0; }
 
-div#wrap_novel div.novel div.inform h3 {
-	margin-bottom: 10px;
+/*Novel*/
+div.wrap_novel { display: flex; }
+div.wrap_novel div.cover {
+	overflow: hidden;
 }
-
-div#wrap_novel div.novel div.inform p {
+div.wrap_novel div.cover img {
+	object-fit:cover;
+	border-radius: 5px;
+}
+div.wrap_novel div.inform p{
 	padding: 5px 0;
 }
+
 /*==============================================*/
 
 /*Moderation*/

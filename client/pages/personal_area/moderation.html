@@ -8,7 +8,7 @@
 	function load_left() {
 		out = `
 			<h2>Новеллы на модерации</h2>
-			<div id="wrap_novel"></div>
+			<div id="wrap_novels"></div>
 		`;
 		$(".left .wrap .tab_content").html(out);
 	}
@@ -46,7 +46,7 @@
 					`;
 				});
 			}
-			$("#wrap_novel").html(out);
+			$("#wrap_novels").html(out);
 		}, null, "api/user/moderation_novels");
 	}
 

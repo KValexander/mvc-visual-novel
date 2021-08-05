@@ -2,6 +2,7 @@
 let route = {
 	path_to_file: "client/pages/",
 	extension: "html",
+	url_id: -1,
 	xhr: new XMLHttpRequest(),
 
 	// Modifying Path Data and Extensions
@@ -12,27 +13,38 @@ let route = {
 
 	// Checking the address bar
 	check_pathname: function() {
-		let pathname = location.pathname;
+		let pathname = location.pathname, id = -1, check;
 		if (/\/$/.test(pathname) && pathname.length > 1) pathname = pathname.replace(/.$/, "");
 		if (pathname != "/") {
-			if (pathname.includes("-")) pathname = pathname.replace("-", "/");
-			this.redirect(pathname.substr(1), false);
-		}
-		else this.redirect("index", false);
+			if (pathname.includes("-")) pathname = pathname.replace(/-/g, "/");
+			check = pathname.split("/");
+			if(check.length > 2 && !isNaN(check[check.length - 1])) {
+				id = check[check.length - 1]; check.pop();
+				pathname = check.join("/");
+			} // console.log(id, pathname);
+			this.redirect(pathname.substr(1), id, false);
+		} else this.redirect("index", id, false);
 	},
 
 	// Redirect to the desired page
-	redirect: function(page, state) {
+	redirect: function(page, id=-1, state=true) {
 		// Path and url formation
-		let path = this.path_to_file + page + "." + this.extension;
-		let url = "/" + page;
+		let path = "", url = "";
+		path = this.path_to_file + page + "." + this.extension;
+		if (id != -1) {
+			url = "/" + page + "/" + id;
+			this.url_id = id;
+		} else url = "/" + page;
+
 		// Checks
 		if(page == "index") url = "/";
+
 		// Url setting
-		if(state == undefined) {
+		if(state) {
 			url = url.replace(/\//g,(i => m => !i++ ? m : '-')(0));
 			window.history.pushState(null, null, url); // history api
 		}
+
 		// Getting page
 		this.get_page(path, url);
 	},
@@ -47,8 +59,7 @@ let route = {
 			if (this.xhr.responseText.includes("<!DOCTYPE html>"))
 				return route.redirect("404");
 			$("#app").html(this.xhr.responseText);
-		}
-		else console.log(this.xhr);
+		} else console.log(this.xhr);
 
 		// Fetch request, the shortest
 		// fetch(path).then(response => response.text())
@@ -65,8 +76,7 @@ let route = {
 			if (this.xhr.responseText.includes("<!DOCTYPE html>"))
 				return $("#" + elem_id).html(`<h1>Ошибка 404</h1> <h3>Такого файла нет</h3>`);
 			$("#" + elem_id).html(this.xhr.responseText);
-		}
-		else console.log(this.xhr);
+		} else console.log(this.xhr);
 	},
 };
 

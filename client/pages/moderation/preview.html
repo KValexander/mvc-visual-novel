@@ -1,0 +1,51 @@
+<script>
+	// Check for authorization with access rights
+	auth.check(() => {
+		// Retrieving novel data
+		request.get(data => {
+			data = JSON.parse(data);
+			if(data.data == null) {
+				message.show("Новелла не найдена");
+				return route.redirect('index');
+			}
+			console.log(data);
+			out_data(data.data);
+		}, null, "api/novel/"+route.url_id);
+	}, true);
+
+	// Data output
+	function out_data(data) {
+		let title;
+		title = (data.original_title == "") ? data.title : data.title + " | " + data.original_title;
+		out = `
+			<div class="left">
+				<h2>${title}</h2><br>
+				<h3>Скриншоты</h3>
+				<div class="slider"></div><br>
+				<h3>Описание</h3>
+				<p>${data.description}</p><br>
+				<h3>Комментарии</h3>
+			</div>
+			<div class="right">
+				<div class="cover">
+					<img src="server/${data.cover.path_to_image}" />
+				</div><br>
+				<div class="inform">
+					<p><b>Год релиза:</b> ${data.year_release}</p>
+					<p><b>Тип:</b> ${data.type}</p>
+					<p><b>Платформа:</b> ${data.platforms}</p>
+					<p><b>Продолжительность:</b> ${data.duration}</p>
+					<p><b>Жанры:</b> ${data.genres}</p>
+					<p><b>Разработчик:</b> ${data.developer}</p>
+					<p><b>Страна:</b> ${data.country}</p>
+					<p><b>Язык:</b> ${data.language}</p>
+				</div>
+			</div>
+		`;
+		$(".wrap_novel").html(out);
+	}
+</script>
+
+<div class="content">
+	<div class="wrap_novel"></div>
+</div>

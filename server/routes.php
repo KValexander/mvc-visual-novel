@@ -25,11 +25,16 @@
 	*/
 
 	// Register
-	Route::post("/api/register", "AuthController/register");
+	Route::post("/api/auth/register", "AuthController/register");
+
 	// Login
-	Route::post("/api/login", "AuthController/login");
+	Route::post("/api/auth/login", "AuthController/login");
+
 	// Role
-	Route::get("/api/role", "UserController/get_role");
+	Route::get("/api/user/role", "UserController/get_role");
+
+	// Get novel
+	Route::get("/api/novel/{id}", "NovelController/get_novel");
 
 	// Routes for authorized users only
 	Route::middleware("AuthMiddleware", function() {
@@ -50,7 +55,7 @@
 		Route::get("/api/user/moderation_novels", "UserController/get_moderation_novels");
 
 		// Logout
-		Route::get("/api/logout", "AuthController/logout");
+		Route::get("/api/auth/logout", "AuthController/logout");
 
 	});
 
@@ -62,6 +67,9 @@
 
 		// Get all novels for moderation
 		Route::get("/api/get/moderation_novels", "ModerationController/get_moderation_novels");
+
+		// Approve novel
+		Route::get("/api/novel/{id}/approve", "ModerationController/novel_approve");
 
 		// Add genre
 		Route::get("/api/add/genre", "ModerationController/add_genre");
