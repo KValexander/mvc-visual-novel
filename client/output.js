@@ -228,15 +228,20 @@ let output = {
 		title = (data.original_title == "") ? data.title : data.title + " | " + data.original_title;
 		out = `
 			<div class="left">
-				<h2>${title}</h2><br>
-				<div class="slider">
+				<h2>${title}</h2>
+				<div class="slider shell">
 					<div class="slides"></div>
 					<div class="images"></div>
-				</div><br>
-				<h3>Описание</h3>
-				<p>${data.description}</p><br>
-				<h3>Комментарии (${data.comments.length}):</h3>
-				<div class="comments"></div>
+				</div>
+				<div class="wrap_description shell">
+					<h3>Описание</h3>
+					<p>${data.description}</p>
+				</div>
+				<div class="wrap_comments shell">
+					<h3>Комментарии:</h3>
+					<div class="form"></div>
+					<div class="comments"></div>
+				</div>
 			</div>
 			<div class="right">
 				<div class="cover">
@@ -255,8 +260,10 @@ let output = {
 			</div>
 		`;
 		$(".wrap_novel").html(out);
+		// 
 		this.novel_data_screenshots(data.screenshots);
-		this.novel_data_comments(data.comments);
+		this.novel_data_comments_form();
+		query.get_comments();
 	},
 
 	// Output screenshots of the novel
@@ -274,9 +281,8 @@ let output = {
 		slider.start();
 	},
 
-	// Output comments of the novel
-	novel_data_comments: function(data) {
-		console.log(data);
+	// Output comments form of the novel
+	novel_data_comments_form: function(data) {
 		if (auth.role != "guest") {
 			out = `
 				<form id="add_comment" onsubmit="return query.add_comment()">
@@ -291,11 +297,29 @@ let output = {
 				</form><hr>
 			`;
 		} else out = `<p>Войдите чтобы оставить комментарий</p>`;
-		if(data.length == 0) {
-			out += `<h3>Комментарии отсутствуют</h3>`;
-		} else {
-			out += ``;
+		$(".wrap_comments .form").html(out);
+	},
+
+	// Output comments of the novel
+	novel_data_comments: function(data) {
+		out = ``;
+		if(data.length == 0) out = `<h3>Комментарии отсутствуют</h3>`;
+		else {
+			data.forEach(comment => {
+				avatar = (comment.user.avatar != null) ? `<div class="avatar"><img src="server/${comment.user.avatar.path_to_image}" /></div>` : ``;
+				del = (localStorage.getItem("user_id") == comment.user.user_id) ? `<p class="notice"><a onclick="query.delete_comment(${comment.comment_id})">Удалить</a></p>` : ``;
+				out += `
+					<div class="comment">
+						${avatar}
+						<div class="data">
+							<div class="head"><h3>${comment.user.username}</h3>${del}</div>
+							<p>${comment.content}</p>
+						</div>
+					</div>
+				`;
+			});
 		}
-		$(".comments").html(out);
+		$(".wrap_comments .comments").html(out);
 	}
+
 }

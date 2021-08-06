@@ -408,6 +408,14 @@ div.wrap_novel div.inform p{
 	padding: 5px 0;
 }
 
+div.wrap_novel div.shell {
+	margin: 20px 0;
+}
+
+div.wrap_novel div.shell h3 {
+	margin-bottom: 10px;
+}
+
 div.wrap_novel div.slider {
 	overflow: hidden;
 	border-radius: 5px;
@@ -448,6 +456,40 @@ div.wrap_novel div.slider div.images div.outline {
 	border: solid 2px #FF6600;
 	height: calc(100% - 20px);
 	width: 20%;
+}
+
+div.wrap_novel div.wrap_comments {
+	display: flex;
+	flex-wrap: wrap;
+}
+div.wrap_novel div.wrap_comments div.form,
+div.wrap_novel div.wrap_comments div.comments {
+	width: 100%;
+}
+
+div.wrap_novel div.wrap_comments div.comments {
+	display: flex;
+	flex-direction: column;
+}
+
+div.wrap_novel div.wrap_comments div.comments div.comment {
+	display: flex;
+	padding: 20px;
+	margin: 10px 0;
+	border-radius: 5px;
+	border: solid 1px rgba(0,0,0,0.3);
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+div.wrap_novel div.wrap_comments div.comments div.comment div.avatar{
+	width: 10%;
+	min-height: 50px;
+	overflow: hidden;
+	margin-right: 3%;
+	border-radius: 5px;
+}
+div.wrap_novel div.wrap_comments div.comments div.comment div.head {
+	display: flex;
 }
 /*==============================================*/
 

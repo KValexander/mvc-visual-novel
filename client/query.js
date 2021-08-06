@@ -18,6 +18,7 @@ let query = {
 		request.get((data) => {
 			// Data parsing
 			data = JSON.parse(data);
+			localStorage.setItem("user_id", data.data.user_id);
 			// Output personal inform
 			output.personal_data_inform(data.data);
 		}, null, "api/user");
@@ -132,6 +133,17 @@ let query = {
 		}, null, "api/novel/"+route.url_id);
 	},
 
+	// Getting comments
+	get_comments: function() {
+		// Request to get comment data
+		request.get(data => {
+			// Data parsing
+			data = JSON.parse(data);
+			// Output comments data
+			output.novel_data_comments(data.data.comments);
+		}, null, `api/novel/${route.url_id}/comments`);
+	},
+
 	// Adding a comment to the novel
 	add_comment: function() {
 		// Serializing Form Data
@@ -143,15 +155,28 @@ let query = {
 			// Clear field
 			$("#comment").html("").removeClass("error_acc");
 			$(`[name=comment]`).removeClass("err");
+			// Success
+			if(data.status == 200) {
+				// Clearing form data
+				$("form#add_comment")[0].reset();
+				// Displaying a Success Message
+				message.show(data.data);
+				// Updating comments
+				query.get_comments();
 			// Validation error
-			if(data.status == 422) {
+			} else if(data.status == 422) {
+				// Error output
 				$("#comment").html(data.data).addClass("error_acc");
 				$(`[name=comment]`).addClass("err");
 			}
-			console.log(data);
 		}, form, `api/novel/${route.url_id}/comment/add`);
 		// To cancel submitting form data
 		return false;
+	},
+
+	// Deleting a comment
+	delete_comment: function(id) {
+		console.log(id);
 	},
 
 	// Getting and output directories

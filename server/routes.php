@@ -39,6 +39,9 @@
 	// Get directories
 	Route::get("/api/directory/get", "DirectoryController/get_directories");
 
+	// Get comments
+	Route::get("/api/novel/{id}/comments", "CommentController/get_comments");
+
 	// Routes for authorized users only
 	Route::middleware("AuthMiddleware", function() {
 
