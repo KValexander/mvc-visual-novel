@@ -174,9 +174,9 @@ class NovelController {
 		$novel["user"] = $user;
 
 		// Getting comments
-		$comments = DB::table("comments")->where("novel_id", "=", $novel["user_id"])->get();
+		$comments = DB::table("comments")->where("novel_id", "=", $novel["novel_id"])->get();
 		foreach($comments as $key => $comment) {
-			$comments[$key]["user"] = DB::table("users")->where("user_id", "=", $comment["user_id"])->first();
+			$comments[$key]["user"] = DB::table("users")->where("user_id", "=", $comment["novel_id"])->first();
 			$comments[$key]["user"]["avatar"] = DB::table("images")
 				->where("foreign_id", "=", $comments[$key]["user"]["user_id"])
 				->andWhere("usage", "=", "avatar")

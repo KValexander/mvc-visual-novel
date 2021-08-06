@@ -1,54 +1,13 @@
 <script>
 	// Calling functions
-	load_left();
-	load_right();
-	load_data();
-
+	load_layout(); query.get_user_moderated_novels();
 	// Loading layout
-	function load_left() {
+	function load_layout() {
 		out = `
 			<h2>Новеллы на модерации</h2>
 			<div id="wrap_novels"></div>
 		`;
 		$(".left .wrap .tab_content").html(out);
-	}
-	// Loading layout
-	function load_right() {
 		$(".right .wrap .tab_content").html("");
 	}
-	// Loading data
-	function load_data() {
-		request.get(data => {
-			data = JSON.parse(data); out = ``;
-			if (data.data.novels.length == 0)
-				out = `<h3>На данный момент информация отсутствует</h3>`;
-			else {
-				data.data.novels.forEach(novel => {
-					status = (novel.state == 0) ? `<font color="red">На модерации</font>` : `<font color="green">Одобрена</font>`;
-					out += `
-						<div class="novel">
-							<div class="cover">
-								<img src="server/${novel.cover.path_to_image}">
-							</div>
-							<div class="inform">
-								<h3>${novel.title}</h3>
-								<p><b>Состояние:</b> ${status}</p>
-								<p><b>Год релиза:</b> ${novel.year_release}</p>
-								<p><b>Тип:</b> ${novel.type}</p>
-								<p><b>Платформа:</b> ${novel.platforms}</p>
-								<p><b>Продолжительность:</b> ${novel.duration}</p>
-								<p><b>Жанры:</b> ${novel.genres}</p>
-								<p><b>Разработчик:</b> ${novel.developer}</p>
-								<p><b>Страна:</b> ${novel.country}</p>
-								<p><b>Язык:</b> ${novel.language}</p>
-							</div>
-						</div>
-					`;
-				});
-			}
-			$("#wrap_novels").html(out);
-		}, null, "api/user/moderation_novels");
-	}
-
-
 </script>

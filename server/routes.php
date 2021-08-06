@@ -77,10 +77,10 @@
 		Route::get("/api/moderation/novel/{id}/approve", "ModerationController/novel_approve");
 
 		// Add genre
-		Route::get("/api/directory/genre/add", "ModerationController/add_genre");
+		Route::get("/api/directory/genre/add", "DirectoryController/add_genre");
 
 		// Delete genre
-		Route::get("/api/directory/genre/delete", "ModerationController/delete_genre");
+		Route::get("/api/directory/genre/delete", "DirectoryController/delete_genre");
 
 	});
 

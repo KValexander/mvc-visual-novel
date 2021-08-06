@@ -1,50 +1,9 @@
-<script>
-	out_directories();
-
-	// Retrieving and output data from all directories
-	function out_directories() {
-		request.get(data => {
-			data = JSON.parse(data);
-			out = `<option selected disabled>Жанры</option>`;
-			if (data.data.genres.length != 0)
-				data.data.genres.forEach(genre => out += `<option value="${genre.genre_id}">${genre.genre}</option>`);
-			$("select[name=genre_id]").html(out);
-		}, null, "api/directory/get");
-	}
-
-	// Adding a genre
-	function add_genre() {
-		let form = $("#add_genre").serialize();
-		request.get(data => {
-			out_directories();
-			data = JSON.parse(data);
-			if (data.status == 422) {
-				message.show(data.data.errors.genre);
-				$("#add_genre input[name=genre]").addClass("err");
-			} else {
-				message.show(data.data.message);
-				$("#add_genre input[name=genre]").val("").removeClass("err");
-			}
-		}, null, "api/directory/genre/add?"+form);
-		return false;
-	}
-
-	// Delete genre
-	function delete_genre() {
-		let form = $("#delete_genre").serialize();
-		request.get(data => {
-			out_directories();
-			data = JSON.parse(data);
-			message.show(data.data.message);
-		}, null, "api/directory/genre/delete?"+form);
-		return false;
-	}
-</script>
+<script>query.get_directories("select[name=genre_id]");</script>
 
 <div class="directories">
 	<h2>Добавление справочников</h2>
 	<!-- Add genre -->
-	<form id="add_genre" onsubmit="return add_genre()">
+	<form id="add_genre" onsubmit="return query.add_genre()">
 		<div class="part">
 			<input type="text" placeholder="Добавить жанр" name="genre">
 			<input type="submit" value="Добавить">
@@ -53,7 +12,7 @@
 
 	<h2>Удаление справочников</h2>
 	<!-- Delete genre -->
-	<form id="delete_genre" onsubmit="return delete_genre()">
+	<form id="delete_genre" onsubmit="return query.delete_genre()">
 		<div class="part">
 			<select name="genre_id"></select>
 			<input type="submit" value="Удалить">

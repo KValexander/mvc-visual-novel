@@ -17,6 +17,9 @@
 	<script src="client/route.js"></script>
 	<script src="client/auth.js"></script>
 	<script src="client/message.js"></script>
+	<script src="client/query.js"></script>
+	<script src="client/output.js"></script>
+	<script src="client/slider.js"></script>
 	<!-- Connecting scripts -->
 	<script src="client/script.js"></script>
 

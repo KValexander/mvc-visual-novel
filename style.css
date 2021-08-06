@@ -414,7 +414,8 @@ div.wrap_novel div.slider {
 	height: 600px;
 }
 
-div.wrap_novel div.slider div.slides {
+div.wrap_novel div.slider div.slides,
+div.wrap_novel div.slider div.flip_wrap {
 	display: flex;
 	align-items: stretch;
 	position: relative;
@@ -422,7 +423,6 @@ div.wrap_novel div.slider div.slides {
 }
 
 div.wrap_novel div.slider div.slides img {
-	/*position: absolute;*/
 	width: 100%;
 }
 
