@@ -188,32 +188,29 @@ let output = {
 		$(".right .wrap .tab_content").html(out);
 	},
 
-	// Output of moderated novels
-	moderated_novels: function(data, moder=false) {
-		out = ""; status = ""; actions = "";
+	// Output of novels
+	search_novels: function(data, state=false, moder=false) {
+		out = ""; status = ""; actions = ""; title = "";
 		if (data.novels.length == 0) out = `<h3>На данный момент информация отсутствует</h3>`;
 		else {
 			// Data concatenation
 			data.novels.forEach(novel => {
+				title = (novel.state == 1) ? `<a class="underline" onclick="route.redirect('novel', ${novel.novel_id})"><h3>${novel.title}</h3></a>` :`<h3>${novel.title}</h3>`;
 				actions = (moder) ? `<p><a class="underline" onclick="route.redirect('moderation/preview', ${novel.novel_id})">Предпросмотр</a> | <a class="underline" onclick="query.approve_novel('${novel.novel_id}')">Одобрить</a></p>` : "";
-				status = (novel.state == 0) ? `<font color="red">На модерации</font>` : `<font color="green">Одобрена</font>`;
+				if(state) status = (novel.state == 0) ? `<p><b>Состояние:</b> <font color="red">На модерации</font></p>` : `<p><b>Состояние:</b> <font color="green">Одобрена</font></p>`;
+				else status = "";
 				out += `
 					<div class="novel">
 						<div class="cover">
 							<img src="server/${novel.cover.path_to_image}">
 						</div>
 						<div class="inform">
-							<h3>${novel.title}</h3>
-							${actions}
-							<p><b>Состояние:</b> ${status}</p>
+							${title} ${actions} ${status}
 							<p><b>Год релиза:</b> ${novel.year_release}</p>
 							<p><b>Тип:</b> ${novel.type}</p>
 							<p><b>Платформа:</b> ${novel.platforms}</p>
 							<p><b>Продолжительность:</b> ${novel.duration}</p>
 							<p><b>Жанры:</b> ${novel.genres}</p>
-							<p><b>Разработчик:</b> ${novel.developer}</p>
-							<p><b>Страна:</b> ${novel.country}</p>
-							<p><b>Язык:</b> ${novel.language}</p>
 						</div>
 					</div>
 				`;
@@ -283,6 +280,7 @@ let output = {
 
 	// Output comments form of the novel
 	novel_data_comments_form: function(data) {
+		out = ``;
 		if (auth.role != "guest") {
 			out = `
 				<form id="add_comment" onsubmit="return query.add_comment()">

@@ -33,6 +33,9 @@
 	// Role
 	Route::get("/api/user/role", "UserController/get_role");
 
+	// Get approved novels
+	Route::get("/api/novels", "NovelController/get_novels");
+
 	// Get novel
 	Route::get("/api/novel/{id}", "NovelController/get_novel");
 
@@ -54,11 +57,15 @@
 		// Update avatar
 		Route::post("/api/user/update/avatar", "UserController/update_avatar");
 
-		// Get novels for moderation
-		Route::get("/api/user/moderation_novels", "UserController/get_moderation_novels");
+		// Get moderated novels
+		Route::get("/api/user/moderated_novels", "UserController/get_moderated_novels");
+
+		// Get approved novels
+		Route::get("/api/user/approved_novels", "UserController/get_approved_novels");
 
 		// Add comment
 		Route::post("/api/novel/{id}/comment/add", "CommentController/add_comment");
+
 		// Delete comment
 		Route::get("/api/novel/{id}/comment/delete", "CommentController/delete_comment");
 

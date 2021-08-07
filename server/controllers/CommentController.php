@@ -46,7 +46,23 @@ class CommentController {
 
 	// Delete comment
 	public function delete_comment() {
+		// Retrieving data
+		$novel_id = Request::route("id");
+		$comment_id = Request::input("id");
+		$comment_user_id = DB::table("comments")->where("comment_id", "=", $comment_id)->first()["user_id"];
+		$user_id = Auth::user()["user_id"];
 
+		// Owner verification
+		if ($comment_user_id != $user_id)
+			return response(403, "Вы не являетесь владельцем комментария");
+		
+		// Deleting a comment
+		$delete = DB::table("comments")->where("comment_id", "=", $comment_id)->delete();
+		if(!$delete)
+			return response(400, DB::$connect->error);
+
+		// In case of successful deletion
+		return response(200, "Комментарий удалён");
 	}
 }
 ?>

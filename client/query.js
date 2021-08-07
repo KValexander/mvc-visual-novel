@@ -94,7 +94,7 @@ let query = {
 			// Data parsing
 			data = JSON.parse(data);
 			// Novels output
-			output.moderated_novels(data.data, true);
+			output.search_novels(data.data, true, true);
 		}, null, "api/moderation/novels/get");
 	},
 
@@ -103,18 +103,44 @@ let query = {
 		// Request to get moderated user novels
 		request.get(data => {
 			// Data parsing
-			data = JSON.parse(data); out = ``;
+			data = JSON.parse(data);
 			// Novels output
-			output.moderated_novels(data.data);
-		}, null, "api/user/moderation_novels");
+			output.search_novels(data.data, true);
+		}, null, "api/user/moderated_novels");
+	},
+
+	// Receiving moderated user novels
+	get_user_approved_novels: function() {
+		// Request to get approved user novels
+		request.get(data => {
+			// Data parsing
+			data = JSON.parse(data);
+			// Novels output
+			output.search_novels(data.data, true);
+		}, null, "api/user/approved_novels");
 	},
 
 	// Approve the novel
 	approve_novel: function(id) {
 		// Request for approval of the novel
 		request.get(data => {
-			console.log(data);
+			// Data parsing
+			data = JSON.parse(data);
+			// In case of success
+			if (data.status == 200) {
+				message.show(data.data);
+				this.get_user_moderated_novels();
+			}
 		}, null, "api/moderation/novel/"+id+"/approve");
+	},
+
+	// Retrieving all approdev novels
+	get_novels: function() {
+		// Request for all approved novels
+		request.get(data => {
+			data = JSON.parse(data);
+			output.search_novels(data.data);
+		}, null, "api/novels");
 	},
 
 	// Getting a novel
@@ -124,10 +150,8 @@ let query = {
 			// Data parsing
 			data = JSON.parse(data);
 			// In case of error
-			if(data.data == null) {
-				message.show("Новелла не найдена");
-				return route.redirect('index');
-			}
+			if(data.data == null)
+				return route.redirect('404');
 			// Novel output
 			output.novel_data_layout(data.data);
 		}, null, "api/novel/"+route.url_id);
@@ -176,7 +200,20 @@ let query = {
 
 	// Deleting a comment
 	delete_comment: function(id) {
-		console.log(id);
+		request.get(data => {
+			// Data parsing
+			data = JSON.parse(data);
+			// In case of success
+			if(data.status == 200) {
+				// Displaying a success message
+				message.show(data.data);
+				// Updating comments
+				query.get_comments();
+			// In case of error
+			} else if (data.status == 403) message.show(data.data);
+
+			console.log(data);
+		}, null, `/api/novel/${route.url_id}/comment/delete?id=${id}`)
 	},
 
 	// Getting and output directories

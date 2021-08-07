@@ -240,6 +240,13 @@ div.add_novel form fieldset legend {
 }
 /*==============================================*/
 
+/*Main page*/
+/*==============================================*/
+div.main {
+	display: flex;
+}
+/*==============================================*/
+
 /*====Personal area====*/
 /*==============================================*/
 div.profile {
@@ -380,8 +387,8 @@ div#wrap_novels div.novel:hover {
 }
 
 div#wrap_novels div.novel div.cover {
-	width: 30%;
-	height: 320px;
+	width: 25%;
+	height: 250px;
 	margin-right: 3%;
 	overflow: hidden;
 	border-radius: 5px;
@@ -424,14 +431,17 @@ div.wrap_novel div.slider {
 
 div.wrap_novel div.slider div.slides,
 div.wrap_novel div.slider div.flip_wrap {
-	display: flex;
-	align-items: stretch;
 	position: relative;
 	height: 500px;
+	display: flex;
+	align-items: stretch;
+	align-content: stretch;
 }
 
 div.wrap_novel div.slider div.slides img {
 	width: 100%;
+	min-width: 776px;
+	/*height: 100%;*/
 }
 
 div.wrap_novel div.slider div.images {

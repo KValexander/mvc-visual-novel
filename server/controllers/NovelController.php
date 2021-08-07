@@ -134,6 +134,28 @@ class NovelController {
 		return response(200, "Новелла отправлена на модерацию");
 	}
 
+	// Get novels
+	public function get_novels() {
+		// Get novels
+		$novels = DB::table("novels")->where("state", "=", 1)->get();
+		if ($novels == null) return response(200, null);
+
+		// Get genres and images
+		foreach($novels as $key => $novel) {
+			// Getting cover
+			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$novels[$key]["cover"] = $cover;
+			// Getting genres
+			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			foreach($genres as $genre_id) {
+				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$novels[$key]["genres"] .= $genre ." ";
+			}
+		}
+		// Returning data
+		return response(200, ["novels" => $novels]);
+	}
+
 	// Get novel
 	public function get_novel() {
 		// Getting novel_id from route

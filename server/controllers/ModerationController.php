@@ -27,7 +27,13 @@ class ModerationController {
 
 	// Novel approve
 	public function novel_approve() {
-		echo Request::route("id");
+		// Retrieving data
+		$novel_id = Request::route("id");
+		// Updating data
+		$update = DB::table("novels")->where("novel_id", "=", $novel_id)->update(["state" => "1"]);
+		if(!$update) return response(400, DB::$connect->error);
+		// In case of success
+		return response(200, "Новелла одобрена");
 	}
 }
 ?>
