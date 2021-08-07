@@ -191,6 +191,7 @@ let output = {
 	// Output of novels
 	search_novels: function(data, state=false, moder=false) {
 		out = ""; status = ""; actions = ""; title = "";
+		if(data == null) return $("#wrap_novels").html(`<h3>На данный момент информация отсутствует</h3>`);
 		if (data.novels.length == 0) out = `<h3>На данный момент информация отсутствует</h3>`;
 		else {
 			// Data concatenation
