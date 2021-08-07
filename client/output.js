@@ -280,8 +280,7 @@ let output = {
 
 	// Output comments form of the novel
 	novel_data_comments_form: function(data) {
-		out = ``;
-		if (auth.role != "guest") {
+		if (auth.role == "user" || auth.role == "mdoerator" || auth.role == "admin") {
 			out = `
 				<form id="add_comment" onsubmit="return query.add_comment()">
 					<p class="error" id="comment"></p>
