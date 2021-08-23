@@ -1,10 +1,14 @@
 <?php
 // Simple router
 class Route {
-	// Variables of current values and routes
+	// Variables
+	private static $pathToControllers = "controllers/";
+	private static $pathToMiddleware = "middleware/";
 	private static $current_type = NULL;
 	private static $current_route = NULL;
 	private static $current_middleware = NULL;
+	private static $type = NULL;
+	private static $route = NULL;
 	private static $routes = array();
 
 	// Adding middleware
@@ -53,7 +57,7 @@ class Route {
 		return new self;
 	}
 	// Checking for the existence of a route
-	public static function search($type, $route) {
+	public static function check($type, $route) {
 		// Processing for a route with a variable
 		foreach(self::$routes[$type] as $init => $not_needed) {
 			if (preg_match("/\{.*?\}/", $init)) {
@@ -82,12 +86,66 @@ class Route {
 			}
 		}
 
+		// Writing data
+		self::$type = $type;
+		self::$route = $route;
+
+		// Check
 		if (array_key_exists($route, self::$routes[$type])) return true;
 		else return false;
 	}
-	// Sending data for the desired route
-	public static function give($type, $route) {
-		return self::$routes[$type][$route];
+
+	// Call method
+	public static function call() {
+		// Get route params
+		$route = self::$routes[self::$type][self::$route];
+		$next = true;
+
+		// Connecting middleware in case of presence on the route
+		if ($route["middleware"] != NULL) {
+			$next = false;
+			// If passed function
+			if (is_callable($route["middleware"])) $next = $route["middleware"]();
+			else {
+				// Middleware checking and connection
+				if (!file_exists(self::$pathToMiddleware . $route["middleware"] .".php"))
+					exit('File '.$route["middleware"].'.php does not exist');
+				include self::$pathToMiddleware . $route["middleware"] .".php";
+				if(!class_exists($route["middleware"], false))
+					exit('Class '.$route["middleware"].' not found');
+
+				// Creating an instance
+				$middleware = new $route["middleware"];
+				$handle = "handle";
+
+				// Calling middleware
+				$next = $middleware->$handle();
+			}
+		}
+
+		// Continuation check
+		if(!$next) return;
+
+		// If passed function
+		if (is_callable($route["param"])) return $route["param"]();
+
+		// Retrieving parameters
+		$params = explode("/", $route["param"]);
+
+		// Getting and checking a class and controller
+		include self::$pathToControllers . $params[0] .".php";
+		if(!class_exists($params[0], false))
+			exit("Class $params[0] not found");
+
+		$controller = new $params[0];
+
+		// Getting and checking a method
+		if(!method_exists($controller, $params[1]))
+			exit("Method $params[1] not found");
+
+		$method = (string)$params[1];
+
+		return $controller->$method();
 	}
 
 	// Method to replace only the first match, the only copy-paste in the whole code
