@@ -1,15 +1,13 @@
 <?php
 class DB {
 	// Data for connecting to the base
-	private static $dbhost = "localhost";
-	private static $dbuser = "root";
-	private static $dbpass = "root";
-	private static $dbname = "novel_re";
 	public static $connect;
 
 	// Query data
 	private static $table = "";
 	private static $table_state = false;
+	private static $join = "";
+	private static $join_state = false;
 	private static $where = "";
 	private static $where_state = false;
 	private static $select = "*";
@@ -18,9 +16,9 @@ class DB {
 	private static $orderby_state = false;
 
 	// Connection to base
-	public static function connect() {
+	public static function connect($dbhost, $dbuser, $dbpass, $dbname) {
 		self::$connect = null;
-		self::$connect = new mysqli(self::$dbhost, self::$dbuser, self::$dbpass, self::$dbname);
+		self::$connect = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 		self::$connect->set_charset("utf8");
 		if(self::$connect->connect_errno)
 			die("Connection error: ". self::$connect->connect_errno);
@@ -42,6 +40,13 @@ class DB {
 		return new self;
 	}
 
+	// Join
+	public static function join($table, $field="", $condition="", $value="") {
+		self::$join_state = true; $on = ($field == "") ? "" : "ON";
+		self::$join = sprintf("JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		return new self;
+	}
+
 	// Selecting a table by attribute
 	public static function where($field, $condition, $value) {
 		self::$where_state = true;
@@ -57,7 +62,7 @@ class DB {
 	}
 
 	// Additional condition
-	public static function orWhere($filed, $condition, $value) {
+	public static function orWhere($field, $condition, $value) {
 		if (self::$where_state)
 			self::$where .= sprintf(" OR `%s` %s '%s'", $field, $condition, $value);
 		return new self;
@@ -87,12 +92,13 @@ class DB {
 	}
 
 	// Get data
-	public function get() {
-		$table = (self::$table_state) ? self::$table : "";
-		$where = (self::$where_state) ? self::$where : "";
-		$select = (self::$select_state) ? self::$select : "*";
-		$orderby = (self::$orderby_state) ? self::$orderby : "";
-		$query = sprintf("SELECT %s FROM `%s` %s %s", $select, $table, $where, $orderby);
+	public static function get() {
+		$table = (self::$table_state) ? self::$table : ""; self::$table_state = false;
+		$join = (self::$join_state) ? self::$join : ""; self::$join_state = false;
+		$where = (self::$where_state) ? self::$where : ""; self::$where_state = false;
+		$select = (self::$select_state) ? self::$select : "*"; self::$select_state = false;
+		$orderby = (self::$orderby_state) ? self::$orderby : ""; self::$orderby_state = false;
+		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
 		$result = self::query($query);
 		$array = [];
 		while($row = $result->fetch_assoc())
@@ -102,11 +108,12 @@ class DB {
 
 	// Get first data
 	public static function first() {
-		$table = (self::$table_state) ? self::$table : "";
-		$where = (self::$where_state) ? self::$where : "";
-		$select = (self::$select_state) ? self::$select : "*";
-		$orderby = (self::$orderby_state) ? self::$orderby : "";
-		$query = sprintf("SELECT %s FROM `%s` %s %s", $select, $table, $where, $orderby);
+		$table = (self::$table_state) ? self::$table : ""; self::$table_state = false;
+		$join = (self::$join_state) ? self::$join : ""; self::$join_state = false;
+		$where = (self::$where_state) ? self::$where : ""; self::$where_state = false;
+		$select = (self::$select_state) ? self::$select : "*"; self::$select_state = false;
+		$orderby = (self::$orderby_state) ? self::$orderby : ""; self::$orderby_state = false;
+		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
 		return self::query($query)->fetch_assoc();
 	}
 

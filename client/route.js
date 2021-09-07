@@ -80,4 +80,4 @@ let route = {
 	},
 };
 
-window.addEventListener("popstate", e => route.check_pathname())
+window.addEventListener("popstate", e => route.check_pathname());

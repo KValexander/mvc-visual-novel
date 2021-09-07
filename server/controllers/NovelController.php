@@ -137,7 +137,7 @@ class NovelController {
 	// Get novels
 	public function get_novels() {
 		// Get novels
-		$novels = DB::table("novels")->where("state", "=", 2)->get();
+		$novels = DB::table("novels")->where("state", "=", 1)->get();
 		if ($novels == null) return response(200, null);
 
 		// Get genres and images

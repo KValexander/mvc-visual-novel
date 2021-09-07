@@ -10,7 +10,7 @@
 		Functions: response(), validator() */
 
 	// Database connection
-	DB::connect();
+	DB::connect("localhost", "root", "root", "novel-re");
 
 	// Headers
 	// header("Access-Control-Allow-Origin: *"); // Full access
