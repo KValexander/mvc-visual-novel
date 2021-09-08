@@ -2,10 +2,15 @@
 // Working with the received data
 class Request {
 	// Array with values of route variables
-	private static $route = array();
+	private $route = array();
+	
+	// Constructor Destructor
+	function __construct() {
+		$this->DB = new Database(DBHOST, DBUSERNAME, DBPASSWORD, DBNAME);
+	} function __destruct() { return; }
 
 	// Returns all data
-	public static function all() {
+	public function all() {
 		if($_SERVER["CONTENT_TYPE"] ==  'application/json') {
 			$data = file_get_contents('php://input');
 			$array = json_decode($data, true);
@@ -13,7 +18,7 @@ class Request {
 		return $array;
 	}
 	// Returns data by key
-	public static function input($key) {
+	public function input($key) {
 		if($_SERVER["CONTENT_TYPE"] ==  'application/json') {
 			$data = file_get_contents('php://input');
 			$array = json_decode($data, true);
@@ -22,13 +27,13 @@ class Request {
 	}
 
 	// Returns data by key
-	public static function route($key) {
-		return self::$route[$key];
+	public function route($key) {
+		return $this->route[$key];
 	}
 
 	// Add route variable value
-	public static function add_route($key, $value) {
-		self::$route[$key] = $value;
+	public function add_route($key, $value) {
+		$this->route[$key] = $value;
 	}
 }
 ?>

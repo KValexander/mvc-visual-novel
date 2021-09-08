@@ -110,7 +110,6 @@ class Route {
 				// Middleware checking and connection
 				if (!file_exists(self::$pathToMiddleware . $route["middleware"] .".php"))
 					exit('File '.$route["middleware"].'.php does not exist');
-				include self::$pathToMiddleware . $route["middleware"] .".php";
 				if(!class_exists($route["middleware"], false))
 					exit('Class '.$route["middleware"].' not found');
 
@@ -133,7 +132,7 @@ class Route {
 		$params = explode("/", $route["param"]);
 
 		// Getting and checking a class and controller
-		include self::$pathToControllers . $params[0] .".php";
+		// include self::$pathToControllers . $params[0] .".php";
 		if(!class_exists($params[0], false))
 			exit("Class $params[0] not found");
 

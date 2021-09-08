@@ -1,76 +1,82 @@
 <?php
-class DB {
-	// Data for connecting to the base
-	public static $connect;
+// Database
+class Database {
+	// Connect
+	public $connect;
 
 	// Query data
-	private static $table = "";
-	private static $table_state = false;
-	private static $join = "";
-	private static $join_state = false;
-	private static $where = "";
-	private static $where_state = false;
-	private static $select = "*";
-	private static $select_state = false;
-	private static $orderby = "";
-	private static $orderby_state = false;
+	private $table = "";
+	private $table_state = false;
+	private $join = "";
+	private $join_state = false;
+	private $where = "";
+	private $where_state = false;
+	private $select = "*";
+	private $select_state = false;
+	private $orderby = "";
+	private $orderby_state = false;
 
 	// Connection to base
-	public static function connect($dbhost, $dbuser, $dbpass, $dbname) {
-		self::$connect = null;
-		self::$connect = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-		self::$connect->set_charset("utf8");
-		if(self::$connect->connect_errno)
-			die("Connection error: ". self::$connect->connect_errno);
+	function __construct($dbhost, $dbuser, $dbpass, $dbname) {
+		$this->connect = null;
+		$this->connect = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		$this->connect->set_charset("utf8");
+		if($this->connect->connect_errno)
+			die("Connection error: ". $this->connect->connect_errno);
+	}
+
+	// Desctructor
+	function __destruct() {
+		return;
 	}
 
 	// Executing sql query
-	public static function query($sql) {
-		$result = self::$connect->query($sql);
+	public function query($sql) {
+		$result = $this->connect->query($sql);
 		return $result;
 	}
 
 	// Fluid interface
 	// Table
-	public static function table($table) {
-		self::$table = $table;
-		self::$table_state = true;
-		self::$where_state = false;
-		self::$select_state = false;
-		return new self;
+	public function table($table) {
+		$this->table = $table;
+		$this->table_state = true;
+		$this->where_state = false;
+		$this->select_state = false;
+		return $this;
 	}
 
 	// Join
-	public static function join($table, $field="", $condition="", $value="") {
-		self::$join_state = true; $on = ($field == "") ? "" : "ON";
-		self::$join = sprintf("JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
-		return new self;
+	public function join($table, $field="", $condition="", $value="") {
+		$this->join_state = true; $on = ($field == "") ? "" : "ON";
+		$this->join = sprintf("JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		return $this;
 	}
 
 	// Selecting a table by attribute
-	public static function where($field, $condition, $value) {
-		self::$where_state = true;
-		self::$where = sprintf("WHERE `%s` %s '%s'", $field, $condition, $value);
-		return new self;
+	public function where($field, $condition, $value) {
+		$this->where_state = true;
+		$this->where = sprintf("WHERE `%s` %s '%s'", $field, $condition, $value);
+		return $this;
 	}
 
 	// Additional condition
-	public static function andWhere($field, $condition, $value) {
-		if (self::$where_state)
-			self::$where .= sprintf(" AND `%s` %s '%s'", $field, $condition, $value);
-		return new self;
+	public function andWhere($field, $condition, $value) {
+		if ($this->where_state)
+			$this->where .= sprintf(" AND `%s` %s '%s'", $field, $condition, $value);
+		return $this;
 	}
 
 	// Additional condition
-	public static function orWhere($field, $condition, $value) {
-		if (self::$where_state)
-			self::$where .= sprintf(" OR `%s` %s '%s'", $field, $condition, $value);
-		return new self;
+	public function orWhere($field, $condition, $value) {
+		if ($this->where_state)
+			$this->where .= sprintf(" OR `%s` %s '%s'", $field, $condition, $value);
+		return $this;
 	}
 
 	// Selecting the fields you want
-	public static function select($fields) {
-		self::$select_state = true;
+	public function select($fields) {
+		$this->select_state = true;
 		$fields = explode(",", $fields);
 		$string = "";
 		$counter = 0;
@@ -80,26 +86,26 @@ class DB {
 			else $string .= sprintf("`%s`, ", trim($val));
 			$counter++;
 		}
-		self::$select = $string;
-		return new self;
+		$this->select = $string;
+		return $this;
 	}
 
 	// Order by
-	public static function orderBy($value, $type) {
-		self::$orderby_state = true;
-		self::$orderby = sprintf("ORDER BY `%s` %s", $value, $type);
-		return new self;
+	public function orderBy($value, $type) {
+		$this->orderby_state = true;
+		$this->orderby = sprintf("ORDER BY `%s` %s", $value, $type);
+		return $this;
 	}
 
 	// Get data
-	public static function get() {
-		$table = (self::$table_state) ? self::$table : ""; self::$table_state = false;
-		$join = (self::$join_state) ? self::$join : ""; self::$join_state = false;
-		$where = (self::$where_state) ? self::$where : ""; self::$where_state = false;
-		$select = (self::$select_state) ? self::$select : "*"; self::$select_state = false;
-		$orderby = (self::$orderby_state) ? self::$orderby : ""; self::$orderby_state = false;
+	public function get() {
+		$table = ($this->table_state) ? $this->table : ""; $this->table_state = false;
+		$join = ($this->join_state) ? $this->join : ""; $this->join_state = false;
+		$where = ($this->where_state) ? $this->where : ""; $this->where_state = false;
+		$select = ($this->select_state) ? $this->select : "*"; $this->select_state = false;
+		$orderby = ($this->orderby_state) ? $this->orderby : ""; $this->orderby_state = false;
 		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
-		$result = self::query($query);
+		$result = $this->query($query);
 		$array = [];
 		while($row = $result->fetch_assoc())
 			array_push($array, $row);
@@ -107,18 +113,18 @@ class DB {
 	}
 
 	// Get first data
-	public static function first() {
-		$table = (self::$table_state) ? self::$table : ""; self::$table_state = false;
-		$join = (self::$join_state) ? self::$join : ""; self::$join_state = false;
-		$where = (self::$where_state) ? self::$where : ""; self::$where_state = false;
-		$select = (self::$select_state) ? self::$select : "*"; self::$select_state = false;
-		$orderby = (self::$orderby_state) ? self::$orderby : ""; self::$orderby_state = false;
+	public function first() {
+		$table = ($this->table_state) ? $this->table : ""; $this->table_state = false;
+		$join = ($this->join_state) ? $this->join : ""; $this->join_state = false;
+		$where = ($this->where_state) ? $this->where : ""; $this->where_state = false;
+		$select = ($this->select_state) ? $this->select : "*"; $this->select_state = false;
+		$orderby = ($this->orderby_state) ? $this->orderby : ""; $this->orderby_state = false;
 		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
-		return self::query($query)->fetch_assoc();
+		return $this->query($query)->fetch_assoc();
 	}
 
 	// Insert data
-	public static function insert($array) {
+	public function insert($array) {
 		$keys = "";
 		$values = "";
 		$counter = 0;
@@ -132,19 +138,19 @@ class DB {
 			}
 			$counter++;
 		}
-		$query = sprintf("INSERT INTO `%s`(%s) VALUES (%s)", self::$table, $keys, $values);
-		if(!self::query($query)) return false;
+		$query = sprintf("INSERT INTO `%s`(%s) VALUES (%s)", $this->table, $keys, $values);
+		if(!$this->query($query)) return false;
 		else return true;
 	}
 
 	// Adding data with return ID
-	public static function insert_id($array) {
-		if (self::insert($array)) return DB::$connect->insert_id;
+	public function insert_id($array) {
+		if ($this->insert($array)) return DB::$connect->insert_id;
 		else return false;
 	}
 
 	// Update data
-	public static function update($array) {
+	public function update($array) {
 		$string = "";
 		$counter = 0;
 		foreach($array as $key => $val) {
@@ -153,15 +159,15 @@ class DB {
 			else $string .= sprintf("`%s`='%s', ", $key, $val);
 			$counter++;
 		}
-		$query = sprintf("UPDATE `%s` SET %s %s", self::$table, $string, self::$where);
-		if(!self::query($query)) return false;
+		$query = sprintf("UPDATE `%s` SET %s %s", $this->table, $string, $this->where);
+		if(!$this->query($query)) return false;
 		else return true;
 	}
 
 	// Delete data
-	public static function delete() {
-		$query = sprintf("DELETE FROM `%s` %s", self::$table, self::$where);
-		if(!self::query($query)) return false;
+	public function delete() {
+		$query = sprintf("DELETE FROM `%s` %s", $this->table, $this->where);
+		if(!$this->query($query)) return false;
 		else return true;
 	}
 }

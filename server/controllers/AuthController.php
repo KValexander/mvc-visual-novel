@@ -1,11 +1,11 @@
 <?php
 // Controller with authorization methods
-class AuthController {
+class AuthController extends Common {
 
 	// New User Registration
 	public function register() {
 		// Data validation
-		$validator = validator(Request::all(), [
+		$validator = $this->Validator->make($this->Request->all(), [
 			"username" => "required|string|max:30",
 			"email" => "required|string|email|max:50",
 			"login" => "required|string|max:30|unique:users,login",
@@ -23,32 +23,32 @@ class AuthController {
 		}
 
 		// Writing data to variables 
-		$username 		= trim(Request::input("username"));
-		$email 			= trim(Request::input("email"));
-		$login 			= trim(Request::input("login"));
-		$password 		= crypt(trim(Request::input("password")));
-		$password_check = trim(Request::input("password_check"));
+		$username 		= trim($this->Request->input("username"));
+		$email 			= trim($this->Request->input("email"));
+		$login 			= trim($this->Request->input("login"));
+		$password 		= crypt(trim($this->Request->input("password")));
+		$password_check = trim($this->Request->input("password_check"));
 
 		// Default data
 		$role = "user";
 
 		// Adding data to the database
-		$id = DB::table("users")->insert_id([
+		$id = $this->DB->table("users")->insert_id([
 			"username" => $username,
 			"email" => $email,
 			"login" => $login,
 			"password" => $password,
 			"role" => $role,
 		]);
-		if (!$id) return response(400, DB::$connect->error);
+		if (!$id) return response(400, $this->DB->connect->error);
 
 		// Adding data to the database
-		$insert = DB::table("images")->insert([
+		$insert = $this->DB->table("images")->insert([
 			"foreign_id" => $id,
 			"usage" => "avatar",
 			"affiliation" => "users"
 		]);
-		if (!$insert) return response(400, DB::$connect->error);
+		if (!$insert) return response(400, $this->DB->connect->error);
 
 		// In case of successful data insertion
 		$data = ["message" => "Аккаунт успешно зарегистрирован"];
@@ -58,7 +58,7 @@ class AuthController {
 	// User authorization
 	public function login() {
 		// Data validation
-		$validator = validator(Request::all(), [
+		$validator = $this->Validator->make($this->Request->all(), [
 			"login" => "required|string|max:30",
 			"password" => "required|string|max:100",
 		]);
@@ -73,12 +73,12 @@ class AuthController {
 		}
 
 		// Writing data to variables 
-		$login = trim(Request::input("login"));
-		$password = trim(Request::input("password"));
+		$login = trim($this->Request->input("login"));
+		$password = trim($this->Request->input("password"));
 
 		// Authorization check
-		if(Auth::attempt(["login" => $login, "password" => $password], true)) {
-			$token = Auth::token();
+		if($this->Auth->attempt(["login" => $login, "password" => $password], true)) {
+			$token = $this->Auth->token();
 			$data = [
 				"message" => "Вы успешно авторизировались",
 				"token" => $token
@@ -92,12 +92,12 @@ class AuthController {
 
 	// Logout
 	public function logout() {
-		Auth::logout();
+		$this->Auth->logout();
 	}
 
 	// Auth check
 	public function auth_check() {
-		if (Auth::check()) return response(200, true);
+		if ($this->Auth->check()) return response(200, true);
 		else return response(200, false);
 	}
 

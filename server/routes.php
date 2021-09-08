@@ -24,6 +24,10 @@
 	});
 	*/
 
+	$route = new Route();
+
+	
+
 	// Register
 	Route::post("/api/auth/register", "AuthController/register");
 

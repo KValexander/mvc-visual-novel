@@ -1,11 +1,11 @@
 <?php
 // Controller with novel methods
-class NovelController {
+class NovelController extends Common {
 
 	// Add novel
 	public function add_novel() {
 		// Data validation
-		$validator = validator(Request::all(), [
+		$validator = $this->Validator->make($this->Request->all(), [
 			"title" => "required|string",
 			"cover" => "image|mimes:jpg,png|max:1024",
 			"developer" => "required|string",
@@ -30,32 +30,32 @@ class NovelController {
 
 		// Getting screenshots
 		$screenshots = array();
-		foreach(Request::all() as $key => $val)
+		foreach($this->Request->all() as $key => $val)
 			if (strpos($key, "screenshot") !== false)
 				$screenshots[$key] = $val;
 		if(count($screenshots) < 1)
 			return response(400, "Добавьте не менее одного скриншота");
 
 		// Retrieving user data
-		$user = Auth::user();
+		$user = $this->Auth->user();
 
 		// Writing data to variables
-		$title 				= Request::input("title");
-		$original_title 	= Request::input("original_title");
-		$alternative_title 	= Request::input("alternative_title");
-		$developer 			= Request::input("developer");
-		$year_release 		= Request::input("year_release");
-		$description 		= Request::input("description");
+		$title 				= $this->Request->input("title");
+		$original_title 	= $this->Request->input("original_title");
+		$alternative_title 	= $this->Request->input("alternative_title");
+		$developer 			= $this->Request->input("developer");
+		$year_release 		= $this->Request->input("year_release");
+		$description 		= $this->Request->input("description");
 		// Lists
-		$type 		= Request::input("type");
-		$duration 	= Request::input("duration");
-		$platforms 	= Request::input("platforms");
-		$age_rating = Request::input("age_rating");
-		$country 	= Request::input("country");
-		$language	= Request::input("language");
+		$type 		= $this->Request->input("type");
+		$duration 	= $this->Request->input("duration");
+		$platforms 	= $this->Request->input("platforms");
+		$age_rating = $this->Request->input("age_rating");
+		$country 	= $this->Request->input("country");
+		$language	= $this->Request->input("language");
 
 		// Inserting data into the database with getting id
-		$novel_id = DB::table("novels")->insert_id([
+		$novel_id = $this->DB->table("novels")->insert_id([
 			"user_id" => $user["user_id"],
 			"title" => $title,
 			"original_title" => $original_title,
@@ -70,12 +70,12 @@ class NovelController {
 			"country" => $country,
 			"language" => $language
 		]);
-		if(!$novel_id) return response(400, DB::$connect->error);
+		if(!$novel_id) return response(400, $this->DB->$connect->error);
 
 		// Adding genres
-		$genres = explode(",", Request::input("genres"));
+		$genres = explode(",", $this->Request->input("genres"));
 		foreach($genres as $genre_id) {
-			DB::table("novels-genres")->insert([
+			$this->DB->table("novels-genres")->insert([
 				"novel_id" => $novel_id,
 				"genre_id" => $genre_id
 			]);
@@ -83,14 +83,14 @@ class NovelController {
 
 		// Adding cover and screenshots
 		// Getting cover data
-		$cover = Request::input("cover");
+		$cover = $this->Request->input("cover");
 		$extension = explode(".", $cover["name"])[1];
 		$image_name = "1_". time() ."_". rand() .".". $extension;
 		$path_to_image = "public/images/". $image_name;
 		$type = $cover["type"];
 		$size = $cover["size"];
 		// Adding data to the database
-		$insert = DB::table("images")->insert([
+		$insert = $this->DB->table("images")->insert([
 			"foreign_id" => $novel_id,
 			"usage" => "cover",
 			"path_to_image" => $path_to_image,
@@ -100,7 +100,7 @@ class NovelController {
 			"extension" => $extension,
 			"affiliation" => "novels"
 		]);
-		if(!$insert) return response(400, DB::$connect->error);
+		if(!$insert) return response(400, $this->DB->$connect->error);
 		// Uploading an image to the server
 		if(!move_uploaded_file($cover["tmp_name"], $path_to_image))
 			return response(400, "Ошибка сохранения изображения");
@@ -114,7 +114,7 @@ class NovelController {
 			$type = $screenshot["type"];
 			$size = $screenshot["size"];
 			// Adding data to the database
-			$insert = DB::table("images")->insert([
+			$insert = $this->DB->table("images")->insert([
 				"foreign_id" => $novel_id,
 				"usage" => "screenshot",
 				"path_to_image" => $path_to_image,
@@ -124,7 +124,7 @@ class NovelController {
 				"extension" => $extension,
 				"affiliation" => "novels"
 			]);
-			if(!$insert) return response(400, DB::$connect->error);
+			if(!$insert) return response(400, $this->DB->$connect->error);
 			// Uploading an image to the server
 			if(!move_uploaded_file($screenshot["tmp_name"], $path_to_image))
 				return response(400, "Ошибка сохранения изображения");
@@ -137,18 +137,18 @@ class NovelController {
 	// Get novels
 	public function get_novels() {
 		// Get novels
-		$novels = DB::table("novels")->where("state", "=", 1)->get();
+		$novels = $this->DB->table("novels")->where("state", "=", 1)->get();
 		if ($novels == null) return response(200, null);
 
 		// Get genres and images
 		foreach($novels as $key => $novel) {
 			// Getting cover
-			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$cover = $this->DB->table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
 			$novels[$key]["cover"] = $cover;
 			// Getting genres
-			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
 			foreach($genres as $genre_id) {
-				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
 				$novels[$key]["genres"] .= $genre ." ";
 			}
 		}
@@ -159,27 +159,27 @@ class NovelController {
 	// Get novel
 	public function get_novel() {
 		// Getting novel_id from route
-		$id = Request::route("id");
+		$id = $this->Request->route("id");
 
 		// Getting novel
-		$novel = DB::table("novels")->where("novel_id", "=", $id)->first();
+		$novel = $this->DB->table("novels")->where("novel_id", "=", $id)->first();
 		if ($novel == null) return response(200, null);
 
 		// Getting genres
-		$genres = DB::table("novels-genres")->where("novel_id", "=", $id)->get();
+		$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $id)->get();
 		foreach($genres as $genre_id) {
-			$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+			$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
 			$novel["genres"] .= $genre ." ";
 		}
 
 		// Getting images
-		$cover = DB::table("images")
+		$cover = $this->DB->table("images")
 			->where("foreign_id", "=", $id)
 			->andWhere("usage", "=", "cover")
 			->andWhere("affiliation", "=", "novels")
 			->first();
 		$novel["cover"] = $cover;
-		$screenshots = DB::table("images")
+		$screenshots = $this->DB->table("images")
 			->where("foreign_id", "=", $id)
 			->andWhere("usage", "=", "screenshot")
 			->andWhere("affiliation", "=", "novels")
@@ -187,8 +187,8 @@ class NovelController {
 		$novel["screenshots"] = $screenshots;
 
 		// Getting user data
-		$user = DB::table("users")->where("user_id", "=", $novel["user_id"])->first();
-		$user["avatar"] = DB::table("images")
+		$user = $this->DB->table("users")->where("user_id", "=", $novel["user_id"])->first();
+		$user["avatar"] = $this->DB->table("images")
 			->where("foreign_id", "=", $user["user_id"])
 			->andWhere("usage", "=", "avatar")
 			->andWhere("affiliation", "=", "users")

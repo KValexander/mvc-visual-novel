@@ -2,19 +2,37 @@
 	// Session start
 	session_start();
 
-	// Including files
-	$files = scandir("config/"); unset($files[0], $files[1]);
-	foreach($files as $val) include "config/". $val;
+	// Array of directories
+	$directories = [
+		"config/" => scandir("config/"),
+		"helpers/" => scandir("helpers/"),
+		"controllers/" => scandir("controllers/"),
+		"middleware/" => scandir("middleware/")
+	];
+	// Including files from directories
+	foreach($directories as $key => $files) {
+		unset($files[0], $files[1]);
+		foreach($files as $val) include $key . $val;
+	}
+	// Including the routes file
 	include "routes.php";
-	/* 	Classes: DB, Auth, Rand, Request, Route
-		Functions: response(), validator() */
 
-	// Database connection
-	DB::connect("localhost", "root", "root", "novel-re");
+	// Data to connect on database
+	define("DBHOST", 		"localhost");
+	define("DBUSERNAME", 	"root");
+	define("DBPASSWORD", 	"root");
+	define("DBNAME", 		"novel-re");
+
+	// Data to authenticate
+	define("ATABLE", "users");
+	define("APKEY", "user_id");
+	define("AFPASSWORD", "password");
+	define("AFTOKEN", "remember_token");
+	define("AHEADER", "HTTP_AUTH_TOKEN");
 
 	// Headers
 	// header("Access-Control-Allow-Origin: *"); // Full access
-	header("Access-Control-Allow-Origin: http://spa"); // Access only for a specific domain
+	header("Access-Control-Allow-Origin: http://specific"); // Access only for a specific domain
 	header("Content-Type:application/json;charset=UTF-8");
 
 	// Checking for Route Availability

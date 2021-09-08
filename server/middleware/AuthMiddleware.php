@@ -1,8 +1,8 @@
 <?php
 // Auth middleware
-class AuthMiddleware {
+class AuthMiddleware extends Common {
 	public function handle() {
-		if (Auth::check()) return true;
+		if ($this->Auth->check()) return true;
 		else return response(403, ["message" => "Вы не авторизованы"]);
 	}
 }

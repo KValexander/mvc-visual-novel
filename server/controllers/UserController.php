@@ -1,10 +1,10 @@
 <?php
 // Controller with user methods
-class UserController {
+class UserController extends Common {
 
 	// Getting a user's role
 	public function get_role() {
-		$user = Auth::user();
+		$user = $this->Auth->user();
 		$role = array();
 		$role["code"] = $user["role"];
 		switch($role["code"]) {
@@ -18,15 +18,15 @@ class UserController {
 
 	// Retrieving Authorized User Data
 	public function get_user() {
-		$user = Auth::user();
-		$user["image"] = DB::table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first()["path_to_image"];
+		$user = $this->Auth->user();
+		$user["image"] = $this->DB->table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first()["path_to_image"];
 		return response(200, $user);
 	}
 
 	// Updating user avatar
 	public function update_avatar() {
 		// Data validation
-		$validator = validator(Request::all(), [
+		$validator = $this->Validator->make($this->Request->all(), [
 			"picture" => "image|max:1024|mimes:jpg,png"
 		]);
 		// If there are validation errors
@@ -39,10 +39,10 @@ class UserController {
 		}
 
 		// Retrieving user data
-		$user = Auth::user();
+		$user = $this->Auth->user();
 
 		// Retrieving a record to delete a past photo
-		$image = DB::table("images")
+		$image = $this->DB->table("images")
 			->where("foreign_id", "=", $user["user_id"])
 			->andWhere("affiliation", "=", "users")
 			->select("path_to_image")
@@ -50,7 +50,7 @@ class UserController {
 		if($image["path_to_image"] != NULL) unlink($image["path_to_image"]);
 
 		// Retrieving image data
-		$image = Request::input("picture");
+		$image = $this->Request->input("picture");
 		$extension = explode(".", $image["name"])[1];
 		$image_name = "1_". time() ."_". rand() .".". $extension;
 		$path_to_image = "public/images/". $image_name;
@@ -62,7 +62,7 @@ class UserController {
 			return response(400, (object)["message" => "Ошибка сохранения изображения"]);
 
 		// Updating data in the database
-		DB::table("images")->where("foreign_id", "=", $user["user_id"])->update([
+		$this->DB->table("images")->where("foreign_id", "=", $user["user_id"])->update([
 			"path_to_image" => $path_to_image,
 			"name" => $image_name,
 			"type" => $type,
@@ -76,21 +76,21 @@ class UserController {
 
 	// Receiving novels on moderation of certain users
 	public function get_moderated_novels() {
-		$user = Auth::user();
+		$user = $this->Auth->user();
 		// Getting novels
-		$novels = DB::table("novels")
+		$novels = $this->DB->table("novels")
 			->where("user_id", "=", $user["user_id"])
 			->andWhere("state", "=", 0)
 			->get();
 		// Getting genres and images
 		foreach($novels as $key => $novel) {
 			// Getting cover
-			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$cover = $this->DB->table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
 			$novels[$key]["cover"] = $cover;
 			// Getting genres
-			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
 			foreach($genres as $genre_id) {
-				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
 				$novels[$key]["genres"] .= $genre ." ";
 			}
 		}
@@ -99,21 +99,21 @@ class UserController {
 
 	// Get approved novels
 	public function get_approved_novels() {
-		$user = Auth::user();
+		$user = $this->Auth->user();
 		// Getting novels
-		$novels = DB::table("novels")
+		$novels = $this->DB->table("novels")
 			->where("user_id", "=", $user["user_id"])
 			->andWhere("state", "=", 1)
 			->get();
 		// Getting genres and images
 		foreach($novels as $key => $novel) {
 			// Getting cover
-			$cover = DB::table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+			$cover = $this->DB->table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
 			$novels[$key]["cover"] = $cover;
 			// Getting genres
-			$genres = DB::table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+			$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
 			foreach($genres as $genre_id) {
-				$genre = DB::table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+				$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
 				$novels[$key]["genres"] .= $genre ." ";
 			}
 		}
