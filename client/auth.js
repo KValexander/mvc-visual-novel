@@ -15,8 +15,10 @@ let auth = {
 
 			// Handling a successful registration
 			if(data.status == 200) {
-				// Saving a token
+				// Saving a token and user id
+				console.log(data.data);
 				localStorage.setItem("token", data.data.token);
+				localStorage.setItem("user_id", data.data.user_id);
 				// Show message
 				message.show(data.data.message);
 				// Redirecting
@@ -65,6 +67,7 @@ let auth = {
 				if (moder) {
 					request.get(data => {
 						data = JSON.parse(data);
+						auth.role = (data.data == null) ? "guest" : data.data.code;
 						if (data.data.code == "moderator" || data.data.code == "admin") {
 							if (admin) {
 								if(data.data.code == "admin") callback();
@@ -100,6 +103,15 @@ let auth = {
 				$(`input[name=${key}]`).addClass("err");
 			}
 		}
+	},
+
+	// Get auth role
+	auth_role: function() {
+		request.get((data) => {
+			// Data parsing
+			data = JSON.parse(data);
+			auth.role = (data.data == null) ? "guest" : data.data.code;
+		}, null, "api/user/role");
 	},
 
 	// Logout

@@ -2,6 +2,19 @@
 	// Session start
 	session_start();
 
+	// Data to connect on database
+	define("DBHOST", 		"localhost");
+	define("DBUSERNAME", 	"root");
+	define("DBPASSWORD", 	"root");
+	define("DBNAME", 		"novel-re");
+
+	// Data to authenticate
+	define("ATABLE", "users");
+	define("APKEY", "user_id");
+	define("AFPASSWORD", "password");
+	define("AFTOKEN", "remember_token");
+	define("AHEADER", "HTTP_AUTH_TOKEN");
+
 	// Array of directories
 	$directories = [
 		"config/" => scandir("config/"),
@@ -16,19 +29,6 @@
 	}
 	// Including the routes file
 	include "routes.php";
-
-	// Data to connect on database
-	define("DBHOST", 		"localhost");
-	define("DBUSERNAME", 	"root");
-	define("DBPASSWORD", 	"root");
-	define("DBNAME", 		"novel-re");
-
-	// Data to authenticate
-	define("ATABLE", "users");
-	define("APKEY", "user_id");
-	define("AFPASSWORD", "password");
-	define("AFTOKEN", "remember_token");
-	define("AHEADER", "HTTP_AUTH_TOKEN");
 
 	// Headers
 	// header("Access-Control-Allow-Origin: *"); // Full access

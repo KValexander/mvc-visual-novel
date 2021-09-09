@@ -10,6 +10,8 @@ class Route {
 	private static $type = NULL;
 	private static $route = NULL;
 	private static $routes = array();
+	// Array with values of route variables
+	public static $adv_route = array();
 
 	// Adding middleware
 	public static function middleware($filename, $callback=NULL) {
@@ -78,7 +80,7 @@ class Route {
 				// Working with the received data
 				for($i = 0; $i < count($key[0]); $i++) {
 					$key_k = preg_replace("/(\{)|(\})/", "", $key[0][$i]);
-					Request::add_route($key_k, $array[$i]);
+					self::add_adv_route($key_k, $array[$i]);
 					$rte = str_replace($key[0][$i], $array[$i], $rte);
 				}
 				unset(self::$routes[$type][$init]);
@@ -145,6 +147,11 @@ class Route {
 		$method = (string)$params[1];
 
 		return $controller->$method();
+	}
+
+	// Add route variable value
+	private static function add_adv_route($key, $value) {
+		self::$adv_route[$key] = $value;
 	}
 
 	// Method to replace only the first match, the only copy-paste in the whole code

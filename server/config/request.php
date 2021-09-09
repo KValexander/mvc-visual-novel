@@ -1,8 +1,10 @@
 <?php
 // Working with the received data
 class Request {
-	// Array with values of route variables
-	private $route = array();
+	// Destructor
+	public function __destruct() {
+		return;
+	}
 
 	// Returns all data
 	public function all() {
@@ -23,12 +25,7 @@ class Request {
 
 	// Returns data by key
 	public function route($key) {
-		return $this->route[$key];
-	}
-
-	// Add route variable value
-	public function add_route($key, $value) {
-		$this->route[$key] = $value;
+		return Route::$adv_route[$key];
 	}
 }
 ?>

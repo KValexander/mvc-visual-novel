@@ -79,9 +79,11 @@ class AuthController extends Common {
 		// Authorization check
 		if($this->Auth->attempt(["login" => $login, "password" => $password], true)) {
 			$token = $this->Auth->token();
+			$user_id = $this->Auth->user()["user_id"];
 			$data = [
 				"message" => "Вы успешно авторизировались",
-				"token" => $token
+				"token" => $token,
+				"user_id" => $user_id
 			];
 			return response(200, $data);
 		} else {

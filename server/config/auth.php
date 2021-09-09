@@ -2,13 +2,13 @@
 // Authenticate class
 class Authenticate {
 	// Constructor
-	function __construct($DB, $table, $primary_key, $field_password, $field_token, $auth_header) {
+	function __construct($DB, $data) {
 		$this->DB = $DB;
-		$this->table = $table;
-		$this->primary_key = $primary_key;
-		$this->field_password = $field_password;
-		$this->field_token = $field_token;
-		$this->auth_header = $auth_header;
+		$this->table 			= $data["table"];
+		$this->primary_key 		= $data["primary_key"];
+		$this->field_password 	= $data["field_password"];
+		$this->field_token 		= $data["field_token"];
+		$this->auth_header 		= $data["auth_header"];
 	} function __destruct() { return; }
 
 	// User authorization
@@ -42,12 +42,11 @@ class Authenticate {
 
 	// Retrieving Authorized User Data
 	public function user() {
-		if (self::check()) {
+		// if ($this->check()) {
 			$this->user = $this->DB->table($this->table)->where($this->primary_key, "=", $_SESSION["id"])->first();
 			// In any case, $this->user will contain either data or NULL
 			return $this->user;
-		}
-		else return NULL;
+		// } else return NULL;
 	}
 
 	// Returning an encrypted token

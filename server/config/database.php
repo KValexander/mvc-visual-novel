@@ -30,6 +30,19 @@ class Database {
 		return;
 	}
 
+	// Transaction
+	public function transaction($sql_array) {
+		try {
+			$this->connect->beginTransaction();
+			foreach ($sql_array as $key => $sql)
+				$this->connect->query($sql);
+			$this->connect->commit();
+		} catch (Exception $e) {
+			$this->connect->rollback();
+			throw $e;
+		}
+	}
+
 	// Executing sql query
 	public function query($sql) {
 		$result = $this->connect->query($sql);
@@ -46,12 +59,38 @@ class Database {
 		return $this;
 	}
 
-	// Join
+	// Inner Join
 	public function join($table, $field="", $condition="", $value="") {
-		$this->join_state = true; $on = ($field == "") ? "" : "ON";
+		$this->join_state = true;
+		$on = ($field == "") ? "" : "ON";
 		$this->join = sprintf("JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
 		return $this;
 	}
+
+	// Left Join
+	public function leftJoin($table, $field="", $condition="", $value="") {
+		$this->join_state = true;
+		$on = ($field == "") ? "" : "ON";
+		$this->join = sprintf("LEFT JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		return $this;
+	}
+
+	// Right Join
+	public function rightJoin($table, $field="", $condition="", $value="") {
+		$this->join_state = true;
+		$on = ($field == "") ? "" : "ON";
+		$this->join = sprintf("RIGHT JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		return $this;
+	}
+
+	// Full Join
+	public function fullJoin($table, $field="", $condition="", $value="") {
+		$this->join_state = true;
+		$on = ($field == "") ? "" : "ON";
+		$this->join = sprintf("FULL JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		return $this;
+	}
+
 
 	// Selecting a table by attribute
 	public function where($field, $condition, $value) {
@@ -145,7 +184,7 @@ class Database {
 
 	// Adding data with return ID
 	public function insert_id($array) {
-		if ($this->insert($array)) return DB::$connect->insert_id;
+		if ($this->insert($array)) return $this->connect->insert_id;
 		else return false;
 	}
 

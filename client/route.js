@@ -13,6 +13,7 @@ let route = {
 
 	// Checking the address bar
 	check_pathname: function() {
+		auth.auth_role();
 		let pathname = location.pathname, id = -1, check;
 		if (/\/$/.test(pathname) && pathname.length > 1) pathname = pathname.replace(/.$/, "");
 		if (pathname != "/") {

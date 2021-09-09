@@ -18,7 +18,6 @@ let query = {
 		request.get((data) => {
 			// Data parsing
 			data = JSON.parse(data);
-			localStorage.setItem("user_id", data.data.user_id);
 			// Output personal inform
 			output.personal_data_inform(data.data);
 		}, null, "api/user");
