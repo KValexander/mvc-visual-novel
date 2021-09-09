@@ -19,7 +19,7 @@ class UserController extends Common {
 	// Retrieving Authorized User Data
 	public function get_user() {
 		$user = $this->Auth->user();
-		$user["image"] = $this->DB->table("images")->where("foreign_id", "=", $user["user_id"])->select("path_to_image")->first()["path_to_image"];
+		$user["image"] = $this->DB->table("images")->where("foreign_id", "=", $user["user_id"])->select(["path_to_image"])->first()["path_to_image"];
 		return response(200, $user);
 	}
 
@@ -45,7 +45,7 @@ class UserController extends Common {
 		$image = $this->DB->table("images")
 			->where("foreign_id", "=", $user["user_id"])
 			->andWhere("affiliation", "=", "users")
-			->select("path_to_image")
+			->select(["path_to_image"])
 			->first();
 		if($image["path_to_image"] != NULL) unlink($image["path_to_image"]);
 

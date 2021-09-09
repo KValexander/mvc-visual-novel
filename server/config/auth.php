@@ -20,7 +20,7 @@ class Authenticate {
 				if(hash_equals($this->user[$key], crypt($val, $this->user[$key]))) continue;
 				else return false;
 			else {
-				$data = $this->DB->table($this->table)->where($key, "=", $val)->select($key)->first()[$key];
+				$data = $this->DB->table($this->table)->where($key, "=", $val)->select([$key])->first()[$key];
 				// Checking for the presence of data
 				if ($data == NULL) return false;
 
@@ -51,7 +51,7 @@ class Authenticate {
 
 	// Returning an encrypted token
 	public function token() {
-		$result = $this->DB->table($this->table)->where($this->primary_key, "=", $_SESSION["id"])->select($this->field_token)->first();
+		$result = $this->DB->table($this->table)->where($this->primary_key, "=", $_SESSION["id"])->select([$this->field_token])->first();
 		if ($result != NULL) return crypt($result[$this->field_token]);
 		else return NULL;
 	}
@@ -74,7 +74,7 @@ class Authenticate {
 
 	// Returning an unencrypted token
 	private function db_token() {
-		$db_token = $this->DB->table($this->table)->where($this->primary_key, "=", $_SESSION["id"])->select($this->field_token)->first();
+		$db_token = $this->DB->table($this->table)->where($this->primary_key, "=", $_SESSION["id"])->select([$this->field_token])->first();
 		return $db_token[$this->field_token];
 	}
 

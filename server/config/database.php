@@ -119,9 +119,7 @@ class Database {
 	// Selecting the fields you want
 	public function select($fields) {
 		$this->select_state = true;
-		$fields = explode(",", $fields);
-		$string = "";
-		$counter = 0;
+		$string = ""; $counter = 0;
 		foreach($fields as $val) {
 			if($counter == count($fields) - 1)
 				$string .= sprintf("`%s`", trim($val));
