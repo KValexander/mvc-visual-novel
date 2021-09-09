@@ -2,8 +2,8 @@
 // Validator
 class Validator {
 	// Constructor Destructor
-	function __construct() {
-		$this->DB = new Database(DBHOST, DBUSERNAME, DBPASSWORD, DBNAME);
+	function __construct($DB) {
+		$this->DB = $DB;
 	} function __destruct() { return; }
 
 	// Validate data

@@ -2,8 +2,8 @@
 // Blanks for the future
 class Migration {
 	// Constructor Destructor
-	function __construct() {
-		$this->DB = new Database(DBHOST, DBUSERNAME, DBPASSWORD, DBNAME);
+	function __construct($DB) {
+		$this->DB = $DB;
 	} function __destruct() { return; }
 	
 	// Create a database tables

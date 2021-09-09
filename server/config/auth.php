@@ -2,8 +2,8 @@
 // Authenticate class
 class Authenticate {
 	// Constructor
-	function __construct($table, $primary_key, $field_password, $field_token, $auth_header) {
-		$this->DB = new Database(DBHOST, DBUSERNAME, DBPASSWORD, DBNAME);
+	function __construct($DB, $table, $primary_key, $field_password, $field_token, $auth_header) {
+		$this->DB = $DB;
 		$this->table = $table;
 		$this->primary_key = $primary_key;
 		$this->field_password = $field_password;

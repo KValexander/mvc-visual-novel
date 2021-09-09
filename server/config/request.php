@@ -3,11 +3,6 @@
 class Request {
 	// Array with values of route variables
 	private $route = array();
-	
-	// Constructor Destructor
-	function __construct() {
-		$this->DB = new Database(DBHOST, DBUSERNAME, DBPASSWORD, DBNAME);
-	} function __destruct() { return; }
 
 	// Returns all data
 	public function all() {
