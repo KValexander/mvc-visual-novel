@@ -62,55 +62,58 @@ class Database {
 	// Inner Join
 	public function join($table, $field="", $condition="", $value="") {
 		$this->join_state = true;
-		$on = ($field == "") ? "" : "ON";
-		$this->join = sprintf("JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
+		$this->join = sprintf("JOIN `%s` %s", $table, $on);
 		return $this;
 	}
 
 	// Left Join
 	public function leftJoin($table, $field="", $condition="", $value="") {
 		$this->join_state = true;
-		$on = ($field == "") ? "" : "ON";
-		$this->join = sprintf("LEFT JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
+		$this->join = sprintf("LEFT JOIN `%s` %s", $table, $on);
 		return $this;
 	}
 
 	// Right Join
 	public function rightJoin($table, $field="", $condition="", $value="") {
 		$this->join_state = true;
-		$on = ($field == "") ? "" : "ON";
-		$this->join = sprintf("RIGHT JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
+		$this->join = sprintf("RIGHT JOIN `%s` %s", $table, $on);
 		return $this;
 	}
 
 	// Full Join
 	public function fullJoin($table, $field="", $condition="", $value="") {
 		$this->join_state = true;
-		$on = ($field == "") ? "" : "ON";
-		$this->join = sprintf("FULL JOIN `%s` %s %s %s %s", $table, $on, $field, $condition, $value);
+		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
+		$this->join = sprintf("FULL JOIN `%s` %s", $table, $on);
 		return $this;
 	}
 
 
 	// Selecting a table by attribute
-	public function where($field, $condition, $value) {
+	public function where($field, $condition, $value="") {
 		$this->where_state = true;
-		$this->where = sprintf("WHERE `%s` %s '%s'", $field, $condition, $value);
+		$where = ($value == "") ? sprintf("= '%s'", $condition) : sprintf("%s '%s'", $condition, $value);
+		$this->where = sprintf("WHERE `%s` %s", $field, $where);
 		return $this;
 	}
 
 	// Additional condition
-	public function andWhere($field, $condition, $value) {
-		if ($this->where_state)
-			$this->where .= sprintf(" AND `%s` %s '%s'", $field, $condition, $value);
-		return $this;
+	public function andWhere($field, $condition, $value="") {
+		if ($this->where_state) {
+			$where = ($value == "") ? sprintf("= '%s'", $condition) : sprintf("%s '%s'", $condition, $value);
+			$this->where .= sprintf(" AND `%s` %s", $field, $where);
+		} return $this;
 	}
 
 	// Additional condition
 	public function orWhere($field, $condition, $value) {
-		if ($this->where_state)
-			$this->where .= sprintf(" OR `%s` %s '%s'", $field, $condition, $value);
-		return $this;
+		if ($this->where_state) {
+			$where = ($value == "") ? sprintf("= '%s'", $condition) : sprintf("%s '%s'", $condition, $value);
+			$this->where .= sprintf(" OR `%s` %s", $field, $where);
+		} return $this;
 	}
 
 	// Selecting the fields you want
