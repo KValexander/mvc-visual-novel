@@ -142,15 +142,14 @@ class NovelController extends Common {
 
 		// Get genres and images
 		foreach($novels as $key => $novel) {
+			$join = $this->DB->table("novels-genres")->leftJoin("genres", "genre_id")->where("novel_id", $novel["novel_id"])->get();
 			// Getting cover
 			$cover = $this->DB->table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
 			$novels[$key]["cover"] = $cover;
 			// Getting genres
-			$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
-			foreach($genres as $genre_id) {
-				$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
-				$novels[$key]["genres"] .= $genre ." ";
-			}
+			$genres = $this->DB->table("novels-genres")->leftJoin("genres", "genre_id")->where("novel_id", $novel["novel_id"])->get();
+			foreach($genres as $genre)
+				$novels[$key]["genres"] .= $genre["genre"] ." ";
 		}
 		// Returning data
 		return response(200, ["novels" => $novels]);
@@ -166,11 +165,9 @@ class NovelController extends Common {
 		if ($novel == null) return response(200, null);
 
 		// Getting genres
-		$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $id)->get();
-		foreach($genres as $genre_id) {
-			$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
-			$novel["genres"] .= $genre ." ";
-		}
+		$genres = $this->DB->table("novels-genres")->leftJoin("genres", "genre_id")->where("novel_id", $id)->get();
+		foreach($genres as $genre)
+			$novel["genres"] .= $genre["genre"] ." ";
 
 		// Getting images
 		$cover = $this->DB->table("images")

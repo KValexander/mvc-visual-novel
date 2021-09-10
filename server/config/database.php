@@ -59,44 +59,73 @@ class Database {
 		return $this;
 	}
 
-	// Inner Join
+	// Join(Full join), Cross join, Inner join, Left join, Right join
+	// Join
 	public function join($table, $field="", $condition="", $value="") {
-		$this->join_state = true;
-		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
-		$this->join = sprintf("JOIN `%s` %s", $table, $on);
+		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
+		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		switch($this->join_state) {
+			case true: $this->join .= sprintf(" JOIN `%s` %s", $table, $pred); break;
+			case false:
+				$this->join = sprintf("JOIN `%s` %s", $table, $pred);
+				$this->join_state = true;
+			break;
+		}
 		return $this;
 	}
 
+	// Inner Join
+	public function innerJoin($table, $field="", $condition="", $value="") {
+		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
+		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		switch($this->join_state) {
+			case true: $this->join .= sprintf(" INNER JOIN `%s` %s", $table, $pred); break;
+			case false:
+				$this->join = sprintf("INNER JOIN `%s` %s", $table, $pred);
+				$this->join_state = true;
+			break;
+		}
+		return $this;
+	}
+	
 	// Left Join
 	public function leftJoin($table, $field="", $condition="", $value="") {
-		$this->join_state = true;
-		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
-		$this->join = sprintf("LEFT JOIN `%s` %s", $table, $on);
+		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
+		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		switch($this->join_state) {
+			case true: $this->join .= sprintf(" LEFT JOIN `%s` %s", $table, $pred); break;
+			case false:
+				$this->join = sprintf("LEFT JOIN `%s` %s", $table, $pred);
+				$this->join_state = true;
+			break;
+		}
 		return $this;
 	}
 
 	// Right Join
 	public function rightJoin($table, $field="", $condition="", $value="") {
-		$this->join_state = true;
-		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
-		$this->join = sprintf("RIGHT JOIN `%s` %s", $table, $on);
-		return $this;
-	}
-
-	// Full Join
-	public function fullJoin($table, $field="", $condition="", $value="") {
-		$this->join_state = true;
-		$on = ($field == "") ? "" : sprintf("ON `%s` %s '%s'", $field, $condition, $value);
-		$this->join = sprintf("FULL JOIN `%s` %s", $table, $on);
+		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
+		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		switch($this->join_state) {
+			case true: $this->join .= sprintf(" RIGHT JOIN `%s` %s", $table, $pred); break;
+			case false:
+				$this->join = sprintf("RIGHT JOIN `%s` %s", $table, $pred);
+				$this->join_state = true;
+			break;
+		}
 		return $this;
 	}
 
 
 	// Selecting a table by attribute
 	public function where($field, $condition, $value="") {
-		$this->where_state = true;
 		$where = ($value == "") ? sprintf("= '%s'", $condition) : sprintf("%s '%s'", $condition, $value);
 		$this->where = sprintf("WHERE `%s` %s", $field, $where);
+		$this->where_state = true;
 		return $this;
 	}
 
@@ -118,7 +147,6 @@ class Database {
 
 	// Selecting the fields you want
 	public function select($fields) {
-		$this->select_state = true;
 		$string = ""; $counter = 0;
 		foreach($fields as $val) {
 			if($counter == count($fields) - 1)
@@ -127,13 +155,14 @@ class Database {
 			$counter++;
 		}
 		$this->select = $string;
+		$this->select_state = true;
 		return $this;
 	}
 
 	// Order by
 	public function orderBy($value, $type) {
-		$this->orderby_state = true;
 		$this->orderby = sprintf("ORDER BY `%s` %s", $value, $type);
+		$this->orderby_state = true;
 		return $this;
 	}
 
@@ -145,8 +174,7 @@ class Database {
 		$select = ($this->select_state) ? $this->select : "*"; $this->select_state = false;
 		$orderby = ($this->orderby_state) ? $this->orderby : ""; $this->orderby_state = false;
 		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
-		$result = $this->query($query);
-		$array = [];
+		$result = $this->query($query); $array = [];
 		while($row = $result->fetch_assoc())
 			array_push($array, $row);
 		return $array;
