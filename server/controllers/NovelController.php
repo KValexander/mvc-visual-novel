@@ -192,6 +192,17 @@ class NovelController extends Common {
 			->first();
 		$novel["user"] = $user;
 
+		$novel["favorite"] = "NULL";
+		if($this->Auth->check()) {
+			$user_id = $this->Auth->user()["user_id"];
+			$favore = $this->DB->table("bookmarks")
+				->where("novel_id", $novel["novel_id"])
+				->andWhere("user_id", $user_id)
+				->first();
+			if($favore != NULL) $novel["favorite"] = true;
+			else $novel["favorite"] = false;
+		}
+
 		// Returning data
 		return response(200, $novel);
 	}

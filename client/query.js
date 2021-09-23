@@ -119,6 +119,15 @@ let query = {
 		}, null, "api/user/approved_novels");
 	},
 
+	// Receiving favorited user novels
+	get_user_favorited_novels: function() {
+		// Request to get favorited user novels
+		request.get(data => {
+			data = JSON.parse(data);
+			output.search_novels(data.data, false);
+		}, null, "api/user/favorited_novels");
+	},
+
 	// Approve the novel
 	approve_novel: function(id) {
 		// Request for approval of the novel
@@ -272,5 +281,24 @@ let query = {
 		// To cancel submitting form data
 		return false;
 	},
+
+	// Add novel on favorite
+	add_favorite: function(novel_id) {
+		request.get(data => {
+			data = JSON.parse(data);
+			console.log(data);
+			message.show(data.data);
+			$(".right .buttons").html(`<input type='button' value='Удалить из избранного' onclick='query.delete_favorite(${novel_id})' />`);
+		}, null, "api/novel/"+novel_id+"/favorite/add");
+	},
+
+	// Delete novel from favorite
+	delete_favorite: function(novel_id) {
+		request.get(data => {
+			data = JSON.parse(data);
+			message.show(data.data);
+			$(".right .buttons").html(`<input type='button' value='Добавить в избранное' onclick='query.add_favorite(${novel_id})' />`);
+		}, null, "api/novel/"+novel_id+"/favorite/delete")
+	}
 
 }

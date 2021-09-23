@@ -1,9 +1,9 @@
 <script>
-	load_layout();
+	load_layout(); query.get_user_favorited_novels();
 	function load_layout() {
 		out = `
 			<h2>Избранные новеллы</h2><br>
-			<h3>На данный момент информация отсутствует</h3>
+			<div id="wrap_novels"></div>
 		`;
 		$(".left .wrap .tab_content").html(out);
 		$(".right .wrap .tab_content").html("");

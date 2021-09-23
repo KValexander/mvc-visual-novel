@@ -119,5 +119,25 @@ class UserController extends Common {
 		}
 		return response(200, ["novels" => $novels]);
 	}
+
+	// Get favorited novels
+	public function get_favorited_novels() {
+		$user_id = $this->Auth->user()["user_id"];
+		$bookmarks = $this->DB->table("bookmarks")->where("user_id", $user_id)->get();
+		if(!$bookmarks) $novels = [];
+		foreach ($bookmarks as $key => $value) {
+			$novels = $this->DB->table("novels")->where("novel_id", $value["novel_id"])->get();
+			foreach ($novels as $key => $novel) {
+				$cover = $this->DB->table("images")->where("foreign_id", "=", $novel["novel_id"])->andWhere("usage", "=", "cover")->andWhere("affiliation", "=", "novels")->first();
+				$novels[$key]["cover"] = $cover;
+				$genres = $this->DB->table("novels-genres")->where("novel_id", "=", $novel["novel_id"])->get();
+				foreach($genres as $genre_id) {
+					$genre = $this->DB->table("genres")->where("genre_id", "=", $genre_id["genre_id"])->first()["genre"];
+					$novels[$key]["genres"] .= $genre ." ";
+				}
+			}
+		}
+		return response(200, ["novels" => $novels]);
+	}
 }
 ?>

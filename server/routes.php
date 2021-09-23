@@ -63,11 +63,20 @@
 		// Get approved novels
 		Route::get("/api/user/approved_novels", "UserController/get_approved_novels");
 
+		// Get favorited novels
+		Route::get("/api/user/favorited_novels", "UserController/get_favorited_novels");
+
 		// Add comment
 		Route::post("/api/novel/{id}/comment/add", "CommentController/add_comment");
 
 		// Delete comment
 		Route::get("/api/novel/{id}/comment/delete", "CommentController/delete_comment");
+
+		// Add favorite
+		Route::get("/api/novel/{id}/favorite/add", "FavoriteController/favorite_add");
+
+		// Delete favorite
+		Route::get("/api/novel/{id}/favorite/delete", "FavoriteController/favorite_delete");
 
 		// Logout
 		Route::get("/api/auth/logout", "AuthController/logout");

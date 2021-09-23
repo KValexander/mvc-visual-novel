@@ -255,12 +255,14 @@ let output = {
 					<p><b>Страна:</b> ${data.country}</p>
 					<p><b>Язык:</b> ${data.language}</p>
 				</div><hr>
+				<div class="buttons"></div>
 			</div>
 		`;
 		$(".wrap_novel").html(out);
 		// 
 		this.novel_data_screenshots(data.screenshots);
 		this.novel_data_comments_form();
+		this.novel_data_favorite(data.favorite, data.novel_id);
 		query.get_comments();
 	},
 
@@ -294,7 +296,7 @@ let output = {
 					</div>
 				</form><hr>
 			`;
-		} else out = `<p>Войдите чтобы оставить комментарий</p>`;
+		} else out = `<p>Войдите чтобы оставить комментарий</p><br>`;
 		$(".wrap_comments .form").html(out);
 	},
 
@@ -318,6 +320,17 @@ let output = {
 			});
 		}
 		$(".wrap_comments .comments").html(out);
-	}
+	},
+
+	// Output buttons favorite
+	novel_data_favorite: function(state, novel_id) {
+		console.log(state);
+		if(state)
+			out = `<input type="button" value="Удалить из избранного" onclick="query.delete_favorite(${novel_id})">`;
+		else
+			out = `<input type="button" value="Добавить в избранное" onclick="query.add_favorite(${novel_id})">`;
+		if(state == "NULL") out = "";
+		$(".right .buttons").html(out);
+	},
 
 }

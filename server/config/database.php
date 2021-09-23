@@ -52,19 +52,19 @@ class Database {
 	// Fluid interface
 	// Table
 	public function table($table) {
-		$this->table = $table;
+		$this->table = "`$table`";
 		$this->table_state = true;
 		$this->where_state = false;
 		$this->select_state = false;
 		return $this;
 	}
 
-	// Join(Full join), Cross join, Inner join, Left join, Right join
+	// Join(Full join), Inner join, Left join, Right join
 	// Join
 	public function join($table, $field="", $condition="", $value="") {
 		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
-		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
-		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		else if ($value == "") $pred = sprintf("ON `%s` = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON `%s` %s %s", $field, $condition, $value);
 		switch($this->join_state) {
 			case true: $this->join .= sprintf(" JOIN `%s` %s", $table, $pred); break;
 			case false:
@@ -78,8 +78,8 @@ class Database {
 	// Inner Join
 	public function innerJoin($table, $field="", $condition="", $value="") {
 		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
-		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
-		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		else if ($value == "") $pred = sprintf("ON `%s` = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON `%s` %s %s", $field, $condition, $value);
 		switch($this->join_state) {
 			case true: $this->join .= sprintf(" INNER JOIN `%s` %s", $table, $pred); break;
 			case false:
@@ -93,8 +93,8 @@ class Database {
 	// Left Join
 	public function leftJoin($table, $field="", $condition="", $value="") {
 		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
-		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
-		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		else if ($value == "") $pred = sprintf("ON `%s` = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON `%s` %s %s", $field, $condition, $value);
 		switch($this->join_state) {
 			case true: $this->join .= sprintf(" LEFT JOIN `%s` %s", $table, $pred); break;
 			case false:
@@ -108,8 +108,8 @@ class Database {
 	// Right Join
 	public function rightJoin($table, $field="", $condition="", $value="") {
 		if($condition == "") $pred = sprintf("USING(`%s`)", $field);
-		else if ($value == "") $pred = sprintf("ON %s = %s", $field, $condition);
-		else $pred = ($field == "") ? "" : sprintf("ON %s %s %s", $field, $condition, $value);
+		else if ($value == "") $pred = sprintf("ON `%s` = %s", $field, $condition);
+		else $pred = ($field == "") ? "" : sprintf("ON `%s` %s %s", $field, $condition, $value);
 		switch($this->join_state) {
 			case true: $this->join .= sprintf(" RIGHT JOIN `%s` %s", $table, $pred); break;
 			case false:
@@ -173,7 +173,7 @@ class Database {
 		$where = ($this->where_state) ? $this->where : ""; $this->where_state = false;
 		$select = ($this->select_state) ? $this->select : "*"; $this->select_state = false;
 		$orderby = ($this->orderby_state) ? $this->orderby : ""; $this->orderby_state = false;
-		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
+		$query = sprintf("SELECT %s FROM %s %s %s %s", $select, $table, $join, $where, $orderby);
 		$result = $this->query($query); $array = [];
 		while($row = $result->fetch_assoc())
 			array_push($array, $row);
@@ -187,7 +187,7 @@ class Database {
 		$where = ($this->where_state) ? $this->where : ""; $this->where_state = false;
 		$select = ($this->select_state) ? $this->select : "*"; $this->select_state = false;
 		$orderby = ($this->orderby_state) ? $this->orderby : ""; $this->orderby_state = false;
-		$query = sprintf("SELECT %s FROM `%s` %s %s %s", $select, $table, $join, $where, $orderby);
+		$query = sprintf("SELECT %s FROM %s %s %s %s", $select, $table, $join, $where, $orderby);
 		return $this->query($query)->fetch_assoc();
 	}
 
@@ -206,7 +206,7 @@ class Database {
 			}
 			$counter++;
 		}
-		$query = sprintf("INSERT INTO `%s`(%s) VALUES (%s)", $this->table, $keys, $values);
+		$query = sprintf("INSERT INTO %s(%s) VALUES (%s)", $this->table, $keys, $values);
 		if(!$this->query($query)) return false;
 		else return true;
 	}
@@ -227,14 +227,14 @@ class Database {
 			else $string .= sprintf("`%s`='%s', ", $key, $val);
 			$counter++;
 		}
-		$query = sprintf("UPDATE `%s` SET %s %s", $this->table, $string, $this->where);
+		$query = sprintf("UPDATE %s SET %s %s", $this->table, $string, $this->where);
 		if(!$this->query($query)) return false;
 		else return true;
 	}
 
 	// Delete data
 	public function delete() {
-		$query = sprintf("DELETE FROM `%s` %s", $this->table, $this->where);
+		$query = sprintf("DELETE FROM %s %s", $this->table, $this->where);
 		if(!$this->query($query)) return false;
 		else return true;
 	}
