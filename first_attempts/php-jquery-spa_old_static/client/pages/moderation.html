@@ -1,0 +1,48 @@
+<script>
+	// Check for authorization with access rights
+	auth.check(() => {
+		page_moderation();
+	}, true);
+
+	// Configuring the loading of moderation pages
+	function page_moderation() {
+		let index = localStorage.getItem("moderation_index");
+		if (index == null) index = 1;
+		$(".actions div").eq(index).addClass("active");
+		$(".actions div a").click(function() {
+			if($(this).parent("div").hasClass("active")) return;
+			localStorage.setItem("moderation_index", $(this).parent("div").index());
+			$(".actions div").removeClass("active");
+			$(this).parent("div").addClass("active");
+			attach($(this).parent("div").index());
+		}); attach(index);
+	}
+
+	// Loading moderation pages
+	function attach(index) {
+		$("#moderation_content").css("display", "none");
+		switch(parseInt(index)) {
+			case 0: route.attach_module("client/pages/moderation/novels.html", "moderation_content"); break;
+			case 1: route.attach_module("client/pages/moderation/users.html", "moderation_content"); break;
+			case 2: route.attach_module("client/pages/moderation/directories.html", "moderation_content"); break;
+		}
+		$("#moderation_content").fadeIn(200);
+	}
+</script>
+
+<div class="content">
+	<div class="moderation">
+		<div class="left">
+			<div id="moderation_content"></div>
+		</div>
+		<div class="right">
+			<h2>Меню модерации</h2>
+			<hr><br>
+			<nav class="actions">
+				<div><a>Модерирование новелл</a></div>
+				<div><a>Пользователи</a></div>
+				<div><a>Справочники</a></div>
+			</nav>
+		</div>
+	</div>
+</div>

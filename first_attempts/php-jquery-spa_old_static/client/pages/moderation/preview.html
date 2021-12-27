@@ -1,0 +1,10 @@
+<script>
+	// Check for authorization with access rights
+	auth.check(() => {
+		query.get_novel();
+	}, true);
+</script>
+
+<div class="content">
+	<div class="wrap_novel"></div>
+</div>

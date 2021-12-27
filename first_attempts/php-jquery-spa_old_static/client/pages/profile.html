@@ -1,0 +1,57 @@
+<script>
+	// Authorization check
+	auth.check(() => {
+		page_tab();
+	});
+
+	// Page tab
+	function page_tab() {
+		let index = localStorage.getItem("tab_index");
+		if (index == null) index = 0;
+		$(".tabs div").eq(index).addClass("active");
+		$(".tabs div").click(function() {
+			if($(this).hasClass("active")) return;
+			localStorage.setItem("tab_index", $(this).index());
+			$(".tabs div").removeClass("active");
+			$(this).addClass("active");
+			attach($(this).index());
+		}); attach(index);
+	}
+
+	// Loading tab data
+	function attach(index) {
+		$(".wrap .tab_content").css("display", "none");
+		switch(parseInt(index)) {
+			case 0: route.attach_module("client/pages/personal_area/page.html", "script"); break;
+			case 1: route.attach_module("client/pages/personal_area/favorites.html", "script"); break;
+			case 2: route.attach_module("client/pages/personal_area/add_novel.html", "script"); break;
+			case 3: route.attach_module("client/pages/personal_area/moderation.html", "script"); break;
+			case 4: route.attach_module("client/pages/personal_area/added.html", "script"); break;
+		}
+		$(".wrap .tab_content").fadeIn(200);
+	}
+</script>
+
+<div id="script"></div>
+
+<div class="content">
+	<div class="profile">
+		<div class="left">
+			<nav class="tabs">
+				<div>Страница</div>
+				<div>Избранное</div>
+				<div>Добавить новеллу</div>
+				<div>На модерации</div>
+				<div>Добавленное</div>
+			</nav>
+			<div class="wrap">
+				<div class="tab_content"></div>
+			</div>
+		</div>
+		<div class="right">
+			<div class="wrap">
+				<div class="tab_content"></div>
+			</div>
+		</div>
+	</div>
+</div>

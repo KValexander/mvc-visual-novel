@@ -1,0 +1,13 @@
+<script>
+	// Calling functions
+	load_layout(); query.get_user_moderated_novels();
+	// Loading layout
+	function load_layout() {
+		out = `
+			<h2>Новеллы на модерации</h2>
+			<div id="wrap_novels"></div>
+		`;
+		$(".left .wrap .tab_content").html(out);
+		$(".right .wrap .tab_content").html("");
+	}
+</script>

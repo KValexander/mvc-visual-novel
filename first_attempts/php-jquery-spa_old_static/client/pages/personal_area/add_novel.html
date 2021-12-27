@@ -1,0 +1,83 @@
+<script>
+	genres = []; screenshots = []; platforms = [];
+	// Calling functions
+	output.form_add_novel();
+	query.get_directories("select[name=genres]");
+
+	// Adding genres to an array
+	function add_genre() {
+		let id = $("select[name=genres]").val();
+		let text = $("select[name=genres]").find("option:selected").text();
+		if (id == null) return;
+
+		let check = genres.find(genre => genre == id);
+		if (check != undefined) return;
+
+		genres.push(id);
+		out = `<div class="genre" onclick="remove_genre(event)">${text}</div>`;
+
+		$(".genres").append(out);
+	}
+	
+	// Remove genre
+	function remove_genre(e) {
+		let dId = $(`select[name=genres] option:contains("${e.target.innerHTML}")`).val();
+		let cIc = genres.findIndex(id => id == dId);
+		genres.splice(cIc, 1);
+		e.target.remove();
+	}
+
+	// Add screenshot to array
+	function add_screenshot() {
+		let screenshot = $("input#screenshot").prop("files")[0];
+		if (screenshot == undefined) return;
+		$("input#screenshot").val("");
+		screenshots.push(screenshot);
+		out = `<div class="screenshot" onclick="remove_screenshot(event)">${screenshot.name}</div>`;
+		$(".screenshots").append(out);
+	}
+
+	// Remove screenshot
+	function remove_screenshot(e) {
+		let cIc = screenshots.findIndex(screenshot => screenshot.name == e.target.innerHTML);
+		screenshots.splice(cIc, 1);
+		e.target.remove();
+	}
+
+	// Add platform to array
+	function add_platform() {
+		let id = $("select[name=platforms]").val();
+		let text = $("select[name=platforms]").find("option:selected").text();
+		if (id == null) return;
+
+		let check = platforms.find(platform => platform == id);
+		if (check != undefined) return;
+
+		platforms.push(id);
+		out = `<div class="platform" onclick="remove_platform(event)">${text}</div>`;
+
+		$(".platforms").append(out);
+	}
+	
+	// Remove platform
+	function remove_platform(e) {
+		let dId = $(`select[name=platforms] option:contains("${e.target.innerHTML}")`).val();
+		let cIc = platforms.findIndex(id => id == dId);
+		platforms.splice(cIc, 1);
+		e.target.remove();
+	}
+
+	// Add novel
+	function add_novel() {
+		// Retrieving form data
+		let formData = new FormData($("form")[0]);
+		// Adding data to the formdata
+		formData.append("genres", genres);
+		formData.append("platforms", platforms);
+		screenshots.forEach((screenshot, i) => formData.append("screenshot"+i, screenshot));
+		// Request to add a novel
+		query.add_novel(formData);
+		// To cancel submitting form data
+		return false;
+	}
+</script>
