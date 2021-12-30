@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 29 2021 г., 20:26
+-- Время создания: Дек 30 2021 г., 07:19
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -119,6 +119,7 @@ CREATE TABLE `messages` (
   `user_two` int(11) NOT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `received` int(1) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
