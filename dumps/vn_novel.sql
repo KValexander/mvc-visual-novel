@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 29 2021 г., 20:25
+-- Время создания: Дек 30 2021 г., 12:52
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -32,6 +32,7 @@ USE `vn_novel`;
 DROP TABLE IF EXISTS `developers`;
 CREATE TABLE `developers` (
   `developer_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `entity` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `website` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -63,7 +64,7 @@ DROP TABLE IF EXISTS `images`;
 CREATE TABLE `images` (
   `image_id` int(11) NOT NULL,
   `external_id` int(11) NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `path_to_image` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -78,6 +79,7 @@ CREATE TABLE `images` (
 DROP TABLE IF EXISTS `novels`;
 CREATE TABLE `novels` (
   `novel_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `developer_id` int(11) DEFAULT NULL,
   `translator_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -90,6 +92,7 @@ CREATE TABLE `novels` (
   `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `language` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `download_link` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `section` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sexucal_content` int(1) NOT NULL DEFAULT 0,
   `views` int(1) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 0,
@@ -144,6 +147,7 @@ CREATE TABLE `tags` (
 DROP TABLE IF EXISTS `translators`;
 CREATE TABLE `translators` (
   `translator_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `website` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -160,7 +164,8 @@ CREATE TABLE `translators` (
 -- Индексы таблицы `developers`
 --
 ALTER TABLE `developers`
-  ADD PRIMARY KEY (`developer_id`);
+  ADD PRIMARY KEY (`developer_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Индексы таблицы `genres`
@@ -181,7 +186,8 @@ ALTER TABLE `images`
 ALTER TABLE `novels`
   ADD PRIMARY KEY (`novel_id`),
   ADD KEY `developer_id` (`developer_id`),
-  ADD KEY `translator_id` (`translator_id`);
+  ADD KEY `translator_id` (`translator_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Индексы таблицы `novels-genres`
@@ -209,7 +215,8 @@ ALTER TABLE `tags`
 -- Индексы таблицы `translators`
 --
 ALTER TABLE `translators`
-  ADD PRIMARY KEY (`translator_id`);
+  ADD PRIMARY KEY (`translator_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц

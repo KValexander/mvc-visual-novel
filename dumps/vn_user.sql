@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 30 2021 г., 10:35
+-- Время создания: Дек 30 2021 г., 12:53
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -22,6 +22,25 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `vn_user` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `vn_user`;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `applications`
+--
+
+DROP TABLE IF EXISTS `applications`;
+CREATE TABLE `applications` (
+  `application_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `response_id` int(11) DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state` int(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -49,8 +68,10 @@ DROP TABLE IF EXISTS `comments`;
 CREATE TABLE `comments` (
   `comment_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `novel_id` int(11) NOT NULL,
+  `external_id` int(11) NOT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -66,7 +87,7 @@ DROP TABLE IF EXISTS `discussions`;
 CREATE TABLE `discussions` (
   `discussion_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `novel_id` int(11) NOT NULL,
+  `novel_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `state` int(1) NOT NULL DEFAULT 1,
@@ -185,7 +206,7 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `role_id` int(11) NOT NULL,
   `role` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -205,6 +226,7 @@ CREATE TABLE `users` (
   `avatar` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `about` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `online` int(1) NOT NULL DEFAULT 0,
+  `creator` int(1) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 2,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -213,6 +235,14 @@ CREATE TABLE `users` (
 --
 -- Индексы сохранённых таблиц
 --
+
+--
+-- Индексы таблицы `applications`
+--
+ALTER TABLE `applications`
+  ADD PRIMARY KEY (`application_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `response_id` (`response_id`);
 
 --
 -- Индексы таблицы `bookmarks`
@@ -228,7 +258,7 @@ ALTER TABLE `bookmarks`
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `novel_id` (`novel_id`);
+  ADD KEY `external_id` (`external_id`) USING BTREE;
 
 --
 -- Индексы таблицы `discussions`
@@ -296,11 +326,18 @@ ALTER TABLE `roles`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `login` (`login`),
   ADD KEY `role_id` (`role_id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
 --
+
+--
+-- AUTO_INCREMENT для таблицы `applications`
+--
+ALTER TABLE `applications`
+  MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `bookmarks`
