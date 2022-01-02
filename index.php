@@ -27,6 +27,7 @@
 
 	// Server
 	$server = new Server();
+	
 	// Check and processing route in case of availability
 	if(!$server->search_route($_SERVER["REQUEST_URI"]))
 		return view("index");
