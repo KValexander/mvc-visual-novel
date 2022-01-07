@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 30 2021 г., 12:58
+-- Время создания: Янв 07 2022 г., 13:48
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -45,6 +45,27 @@ CREATE TABLE `applications` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `articles`
+--
+
+DROP TABLE IF EXISTS `articles`;
+CREATE TABLE `articles` (
+  `article_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `announce` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tags` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
+  `state` int(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `bookmarks`
 --
 
@@ -52,7 +73,8 @@ DROP TABLE IF EXISTS `bookmarks`;
 CREATE TABLE `bookmarks` (
   `bookmark_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `novel_id` int(11) NOT NULL,
+  `external_id` int(11) NOT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -71,7 +93,6 @@ CREATE TABLE `comments` (
   `external_id` int(11) NOT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
   `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `views` int(11) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -90,6 +111,7 @@ CREATE TABLE `discussions` (
   `novel_id` int(11) DEFAULT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -120,8 +142,9 @@ CREATE TABLE `friends` (
 DROP TABLE IF EXISTS `grades`;
 CREATE TABLE `grades` (
   `grade_id` int(11) NOT NULL,
-  `comment_id` int(11) NOT NULL,
+  `external_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `grade` int(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -157,8 +180,10 @@ CREATE TABLE `news` (
   `news_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `title` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `announce` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `content` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL,
   `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -228,6 +253,7 @@ CREATE TABLE `users` (
   `about` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `online` int(1) NOT NULL DEFAULT 0,
   `creator` int(1) NOT NULL DEFAULT 0,
+  `verified` int(1) NOT NULL DEFAULT 0,
   `state` int(1) NOT NULL DEFAULT 2,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -246,12 +272,19 @@ ALTER TABLE `applications`
   ADD KEY `response_id` (`response_id`);
 
 --
+-- Индексы таблицы `articles`
+--
+ALTER TABLE `articles`
+  ADD PRIMARY KEY (`article_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Индексы таблицы `bookmarks`
 --
 ALTER TABLE `bookmarks`
   ADD PRIMARY KEY (`bookmark_id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `novel_id` (`novel_id`);
+  ADD KEY `novel_id` (`external_id`);
 
 --
 -- Индексы таблицы `comments`
@@ -282,7 +315,7 @@ ALTER TABLE `friends`
 --
 ALTER TABLE `grades`
   ADD PRIMARY KEY (`grade_id`),
-  ADD KEY `comment_id` (`comment_id`),
+  ADD KEY `comment_id` (`external_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -339,6 +372,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `applications`
   MODIFY `application_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `articles`
+--
+ALTER TABLE `articles`
+  MODIFY `article_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `bookmarks`

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 30 2021 г., 12:58
+-- Время создания: Янв 07 2022 г., 13:48
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -69,6 +69,7 @@ CREATE TABLE `images` (
   `external_id` int(11) NOT NULL,
   `category` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `path_to_image` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state` int(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
