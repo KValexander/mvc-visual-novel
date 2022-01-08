@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 08 2022 г., 11:47
+-- Время создания: Янв 08 2022 г., 12:30
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -267,7 +267,9 @@ CREATE TABLE `users` (
   `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `login` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `confirmation_code` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `about` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role_id` tinyint(1) NOT NULL DEFAULT 3,
   `online` tinyint(1) NOT NULL DEFAULT 0,
