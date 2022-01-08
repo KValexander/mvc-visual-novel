@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 07 2022 г., 19:13
+-- Время создания: Янв 08 2022 г., 11:47
 -- Версия сервера: 10.3.29-MariaDB
 -- Версия PHP: 7.4.21
 
@@ -35,6 +35,7 @@ CREATE TABLE `applications` (
   `user_id` int(11) NOT NULL,
   `reply_id` int(11) DEFAULT NULL,
   `category` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `content` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `approve` tinyint(1) NOT NULL DEFAULT 0,
